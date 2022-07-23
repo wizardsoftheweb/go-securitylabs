@@ -113,7 +113,7 @@ None of these are in any particular order.
 - [ ] Develop wrappers for [each endpoint](https://apidocs.hunter2.com/#endpoints)
   - [ ] Authentication
   - [ ] Users
-    - [ ] GET /api/users?page=0
+    - [x] GET /api/users?page=0
     - [ ] GET /api/users/details?page=0
     - [ ] GET /api/users/:id/progress
     - [ ] PUT /api/users/:id
