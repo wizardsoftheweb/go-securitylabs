@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 )
 
 func TestNewClient(t *testing.T) {
@@ -36,18 +37,32 @@ func TestNewClient(t *testing.T) {
 	assert.NotEqualf(t, clientWithHttpClient.httpClient, http.DefaultClient, "httpClient should not be set to http.DefaultClient")
 }
 
-func TestClient_newRequest(t *testing.T) {
+type ClientNewRequestSuite struct {
+	suite.Suite
+	server    *httptest.Server
+	serverUrl *url.URL
+	client    *Client
+}
+
+func TestClientNewRequestSuite(t *testing.T) {
+	suite.Run(t, new(ClientNewRequestSuite))
+}
+
+func (suite *ClientNewRequestSuite) SetupTest() {
 	mux := http.NewServeMux()
-	testServer := httptest.NewServer(mux)
-	defer testServer.Close()
-	testServerUrl, _ := url.Parse(testServer.URL)
-	client := NewClient(testServerUrl, nil)
-	assert.NotNilf(t, client, "Client should not be nil")
-	request, err := client.newRequest(http.MethodGet, "/", nil)
-	assert.Nilf(t, err, "Error should be nil")
-	assert.NotNilf(t, request, "Request should not be nil")
-	assert.Equalf(t, http.MethodGet, request.Method, "Method should be set to http.MethodGet")
-	assert.Equalf(t, testServer.URL+"/", request.URL.String(), "URL should be set to testServer.URL")
+	suite.server = httptest.NewServer(mux)
+	defer suite.server.Close()
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+}
+
+func (suite *ClientNewRequestSuite) TestClient_newRequest_Empty() {
+	request, err := suite.client.newRequest(http.MethodGet, "/", nil)
+	suite.Nilf(err, "Error should be nil")
+	suite.NotNilf(request, "Request should not be nil")
+	suite.Equalf(http.MethodGet, request.Method, "Method should be set to http.MethodGet")
+	suite.Equalf(suite.server.URL+"/", request.URL.String(), "URL should be set to testServer.URL")
+	suite.Nilf(request.Body, "Body should be nil")
 }
 
 //type ClientDoResponse struct {
