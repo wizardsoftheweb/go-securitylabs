@@ -16,7 +16,8 @@
 
 ## Authentication
 
-<https://apidocs.hunter2.com/#authentication>
+- [Docs](https://apidocs.hunter2.com/#authentication)
+- [Code](../authentication_test.go)
 
 ### 403 Invalid
 
