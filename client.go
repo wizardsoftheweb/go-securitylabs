@@ -38,9 +38,13 @@ func NewClient(config *ClientConfig, httpClient *http.Client) *Client {
 		newConfig = &ClientConfig{
 			BaseUrl: productionUrl,
 		}
+	} else {
+		newConfig = config
 	}
 	if nil == httpClient {
 		newHttpClient = http.DefaultClient
+	} else {
+		newHttpClient = httpClient
 	}
 	return &Client{
 		Config:     newConfig,
