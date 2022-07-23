@@ -132,6 +132,21 @@ type GetUsersDetailsOptions struct {
 	SortType    *string  `query:"sortType"`
 }
 
+// GetUserProgressLesson
+// This is the format of the lessons object on the /api/users/:id/progress endpoint
+// https://apidocs.hunter2.com/#get-user-progress
+type GetUserProgressLesson struct {
+	Module      string  `json:"module"`
+	LessonId    string  `json:"lessonId"`
+	LessonName  string  `json:"lessonName"`
+	LastVisited string  `json:"lastVisited"`
+	Status      string  `json:"status"`
+	Minutes     float64 `json:"minutes"`
+	Points      int     `json:"points"`
+	StartRating int     `json:"startRating"`
+	EndRating   *int    `json:"endRating"`
+}
+
 // PutUser
 // This is the format of both the request and repsonse body of the
 // /api/user/:id endpoint
