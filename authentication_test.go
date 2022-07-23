@@ -54,7 +54,7 @@ func authenticationTestMiddleware(next http.Handler) http.Handler {
 		}
 		if testRotatedSecret == secret {
 			w.WriteHeader(http.StatusUnauthorized)
-			_, _ = w.Write([]byte("{\"rotated\":\"disabled\"}"))
+			_, _ = w.Write([]byte("{\"message\":\"rotated\"}"))
 			return
 		}
 		next.ServeHTTP(w, r)
