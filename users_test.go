@@ -15,6 +15,7 @@
 package vsl
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -381,6 +382,12 @@ func (suite *UsersTestSuite) SetupTest() {
 
 func (suite *UsersTestSuite) TearDownTest() {
 	suite.server.Close()
+}
+
+func (suite *UsersTestSuite) TestClient_GetUsers() {
+	users, usersErr := suite.client.GetUsers(context.Background(), nil)
+	suite.Nilf(usersErr, "GetUsers() should not return an error")
+	suite.Truef(len(users) > 0, "GetUsers() should return at least one user")
 }
 
 func TestClient_GetUsers(t *testing.T) {
