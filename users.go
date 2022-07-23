@@ -125,6 +125,7 @@ type UsersDetailsOptions struct {
 	EndTime     *int64   `query:"endTime"`
 	Limit       *int     `query:"limit"`
 	Page        *int     `query:"page"`
+	Phrase      *string  `query:"phrase"`
 	StartTime   *int64   `query:"startTime"`
 	RoleIds     []string `query:"roleIds"`
 	Sort        *string  `query:"sort"`
