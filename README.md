@@ -41,8 +41,70 @@ None of these are in any particular order.
 
 - [ ] Get something simple pulled out of the wrapper article
 - [ ] Learn how to use `httptest.Server`
-- [ ] Mock all the available URLs
-- [ ] Develop wrappers for each endpoint (expand this list?)
+- [ ] Build request and response structs for [each of the available URLs](https://apidocs.hunter2.com/#endpoints) (where applicable)
+  - [x] Users
+    - [x] GET /api/users?page=0
+    - [x] GET /api/users/details?page=0
+    - [x] GET /api/users/:id/progress
+    - [x] PUT /api/users/:id
+  - [ ] Summaries
+    - [ ] GET /api/onboarding?page=0
+    - [ ] GET /api/progress?page=0
+    - [ ] GET /api/campaigns/progress?page=0
+    - [ ] GET /api/engagement/time
+  - [ ] Lessons
+    - [ ] GET /api/lessons?page=0
+    - [ ] GET /api/lessons/:id/progress?page=0
+    - [ ] GET /api/lessons/search
+  - [ ] Roles
+    - [ ] GET /api/roles
+    - [ ] GET /api/roles/:id/progress?page=0
+  - [ ] Invites
+    - [ ] POST /api/invites
+- [ ] Mock all [the available URLs](https://apidocs.hunter2.com/#endpoints)
+  - [x] Authentication
+  - [x] Users
+    - [x] GET /api/users?page=0
+    - [x] GET /api/users/details?page=0
+    - [x] GET /api/users/:id/progress
+    - [x] PUT /api/users/:id
+    - [x] DELETE /api/users/:id
+  - [ ] Summaries
+    - [ ] GET /api/onboarding?page=0
+    - [ ] GET /api/progress?page=0
+    - [ ] GET /api/campaigns/progress?page=0
+    - [ ] GET /api/engagement/time
+  - [ ] Lessons
+    - [ ] GET /api/lessons?page=0
+    - [ ] GET /api/lessons/:id/progress?page=0
+    - [ ] GET /api/lessons/search
+  - [ ] Roles
+    - [ ] GET /api/roles
+    - [ ] GET /api/roles/:id/progress?page=0
+  - [ ] Invites
+    - [ ] POST /api/invites
+- [ ] Develop wrappers for [each endpoint](https://apidocs.hunter2.com/#endpoints)
+  - [ ] Authentication
+  - [ ] Users
+    - [ ] GET /api/users?page=0
+    - [ ] GET /api/users/details?page=0
+    - [ ] GET /api/users/:id/progress
+    - [ ] PUT /api/users/:id
+    - [ ] DELETE /api/users/:id
+  - [ ] Summaries
+    - [ ] GET /api/onboarding?page=0
+    - [ ] GET /api/progress?page=0
+    - [ ] GET /api/campaigns/progress?page=0
+    - [ ] GET /api/engagement/time
+  - [ ] Lessons
+    - [ ] GET /api/lessons?page=0
+    - [ ] GET /api/lessons/:id/progress?page=0
+    - [ ] GET /api/lessons/search
+  - [ ] Roles
+    - [ ] GET /api/roles
+    - [ ] GET /api/roles/:id/progress?page=0
+  - [ ] Invites
+    - [ ] POST /api/invites
 
 ### Housekeeping
 
@@ -51,5 +113,7 @@ None of these are in any particular order.
 
 #### `golangci-lint`
 
-- [ ] Reenable `unused`
+- [ ] Reenable
+  - [ ] `unused`
+  - [ ] `deadcode`
 - [ ] Follow `structcheck` issue fix for Go 1.18
