@@ -137,6 +137,7 @@ None of these are in any particular order.
 
 - [ ] Set up CI pipelines (GHA? CircleCI?)
 - [ ] Define nice status checks like code coverage
+- [ ] Figure out godoc
 
 #### `golangci-lint`
 
