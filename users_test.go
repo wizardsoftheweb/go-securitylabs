@@ -27,7 +27,6 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	"github.com/hetiansu5/urlquery"
-	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -388,34 +387,4 @@ func (suite *UsersTestSuite) TestClient_GetUsers() {
 	users, usersErr := suite.client.GetUsers(context.Background(), nil)
 	suite.Nilf(usersErr, "GetUsers() should not return an error")
 	suite.Truef(len(users) > 0, "GetUsers() should return at least one user")
-}
-
-func TestClient_GetUsers(t *testing.T) {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{
-  "nextPage" : "/api/users?page=1",
-  "users": [{
-    "id": "3bd68695e165af6ced227afc",
-    "isAdmin": true,
-    "isDisabled": false,
-    "email": "developer@hunter2.com",
-    "joined": true,
-    "lastActive": 1557981546394,
-    "roles": [
-      "Developers"
-    ]
-  }]
-}
-`))
-	})
-	testServer := httptest.NewServer(mux)
-	defer testServer.Close()
-	testServerUrl, _ := url.Parse(testServer.URL)
-	client := NewClient(testServerUrl, nil)
-	assert.Equalf(t, testServerUrl, client.BaseUrl, "BaseUrl should be set")
-	users, err := client.GetUsersOld()
-	assert.Nilf(t, err, "Response error should be nil")
-	assert.Equal(t, 1, len(users))
 }

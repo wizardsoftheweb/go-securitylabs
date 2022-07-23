@@ -16,9 +16,7 @@ package vsl
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
-	"net/url"
 )
 
 const (
@@ -71,27 +69,6 @@ func (c *Client) GetUsers(ctx context.Context, options *GetUsersOptions) ([]GetU
 	_, responseError := c.do(ctx, request, &responseBody)
 	if nil != responseError {
 		return nil, responseError
-	}
-	return responseBody.Users, nil
-}
-
-func (c *Client) GetUsersOld() ([]GetUsersUsers, error) {
-	relativeUrl := &url.URL{Path: "/users"}
-	requestUrl := c.BaseUrl.ResolveReference(relativeUrl)
-	request, requestGenerationErr := http.NewRequest("GET", requestUrl.String(), nil)
-	if nil != requestGenerationErr {
-		return nil, requestGenerationErr
-	}
-	request.Header.Set("Accept", "application/json")
-	response, responseErr := c.httpClient.Do(request)
-	if nil != responseErr {
-		return nil, responseErr
-	}
-	defer (func() { _ = response.Body.Close() })()
-	var responseBody GetUsersResponse
-	decodeErr := json.NewDecoder(response.Body).Decode(&responseBody)
-	if nil != decodeErr {
-		return nil, decodeErr
 	}
 	return responseBody.Users, nil
 }
