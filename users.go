@@ -15,9 +15,14 @@
 package vsl
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/url"
+)
+
+const (
+	GetUsersPath = "/users"
 )
 
 // GetUsersUsersRoles
@@ -53,7 +58,24 @@ type GetUsersOptions struct {
 	Page *int `query:"page"`
 }
 
-func (c *Client) GetUsers() ([]GetUsersUsers, error) {
+func (c *Client) GetUsers(ctx context.Context, options *GetUsersOptions) ([]GetUsersUsers, error) {
+	request, requestGenerationError := c.newRequest(
+		http.MethodGet,
+		c.buildRelativePath(GetUsersPath, options),
+		nil,
+	)
+	if nil != requestGenerationError {
+		return nil, requestGenerationError
+	}
+	var responseBody GetUsersResponse
+	_, responseError := c.do(ctx, request, &responseBody)
+	if nil != responseError {
+		return nil, responseError
+	}
+	return responseBody.Users, nil
+}
+
+func (c *Client) GetUsersOld() ([]GetUsersUsers, error) {
 	relativeUrl := &url.URL{Path: "/users"}
 	requestUrl := c.BaseUrl.ResolveReference(relativeUrl)
 	request, requestGenerationErr := http.NewRequest("GET", requestUrl.String(), nil)

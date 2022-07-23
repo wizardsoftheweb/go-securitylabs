@@ -383,7 +383,7 @@ func TestClient_GetUsers(t *testing.T) {
 	testServerUrl, _ := url.Parse(testServer.URL)
 	client := NewClient(testServerUrl, nil)
 	assert.Equalf(t, testServerUrl, client.BaseUrl, "BaseUrl should be set")
-	users, err := client.GetUsers()
+	users, err := client.GetUsersOld()
 	assert.Nilf(t, err, "Response error should be nil")
 	assert.Equal(t, 1, len(users))
 }

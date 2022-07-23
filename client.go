@@ -23,6 +23,8 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+
+	"github.com/hetiansu5/urlquery"
 )
 
 const (
@@ -119,4 +121,16 @@ func (c *Client) do(ctx context.Context, request *http.Request, v interface{}) (
 	defer (func() { _ = response.Body.Close() })()
 	parseError := json.NewDecoder(response.Body).Decode(v)
 	return response, parseError
+}
+
+func (c *Client) buildRelativePath(path string, options interface{}) string {
+	if nil == options {
+		return path
+	}
+	rawParams, _ := urlquery.Marshal(options)
+	params := string(rawParams)
+	if "" == params {
+		return path
+	}
+	return fmt.Sprintf("%s?%s", path, params)
 }
