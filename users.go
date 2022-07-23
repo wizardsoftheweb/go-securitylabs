@@ -46,6 +46,13 @@ type UsersResponse struct {
 	Users    []Users `json:"users"`
 }
 
+// UsersOptions
+// These are the query params for the /api/users endpoint
+// https://apidocs.hunter2.com/#get-users
+type UsersOptions struct {
+	Page string `url:"page"`
+}
+
 func (c *Client) GetUsers() ([]Users, error) {
 	relativeUrl := &url.URL{Path: "/users"}
 	requestUrl := c.Config.BaseUrl.ResolveReference(relativeUrl)
