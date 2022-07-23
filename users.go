@@ -147,6 +147,15 @@ type GetUserProgressLesson struct {
 	EndRating   *int    `json:"endRating"`
 }
 
+// GetUserProgressResponse
+// This is the full body of the /api/users/:id/progress endpoint
+// https://apidocs.hunter2.com/#get-user-progress
+type GetUserProgressResponse struct {
+	PointsRequired int                     `json:"pointsRequired"`
+	PointsPossible int                     `json:"pointsPossible"`
+	Lessons        []GetUserProgressLesson `json:"lessons"`
+}
+
 // PutUser
 // This is the format of both the request and repsonse body of the
 // /api/user/:id endpoint
