@@ -39,18 +39,18 @@ func TestNewClient(t *testing.T) {
 	assert.NotEqualf(t, clientWithHttpClient.httpClient, http.DefaultClient, "httpClient should not be set to http.DefaultClient")
 }
 
-type ClientSuite struct {
+type ClientTestSuite struct {
 	suite.Suite
 	server    *httptest.Server
 	serverUrl *url.URL
 	client    *Client
 }
 
-func TestClientSuite(t *testing.T) {
-	suite.Run(t, new(ClientSuite))
+func TestClientTestSuite(t *testing.T) {
+	suite.Run(t, new(ClientTestSuite))
 }
 
-func (suite *ClientSuite) SetupTest() {
+func (suite *ClientTestSuite) SetupTest() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -61,11 +61,11 @@ func (suite *ClientSuite) SetupTest() {
 	suite.client = NewClient(suite.serverUrl, nil)
 }
 
-func (suite *ClientSuite) TearDownTest() {
+func (suite *ClientTestSuite) TearDownTest() {
 	suite.server.Close()
 }
 
-func (suite *ClientSuite) TestClient_newRequest_Empty() {
+func (suite *ClientTestSuite) TestClient_newRequest_Empty() {
 	request, err := suite.client.newRequest(http.MethodGet, "/", nil)
 	suite.Nilf(err, "Error should be nil")
 	suite.NotNilf(request, "Request should not be nil")
@@ -74,7 +74,7 @@ func (suite *ClientSuite) TestClient_newRequest_Empty() {
 	suite.Nilf(request.Body, "Body should be nil")
 }
 
-func (suite *ClientSuite) TestClient_newRequest_WithBody() {
+func (suite *ClientTestSuite) TestClient_newRequest_WithBody() {
 	body := struct {
 		Name string `json:"name"`
 	}{Name: "test"}
@@ -90,7 +90,7 @@ func (suite *ClientSuite) TestClient_newRequest_WithBody() {
 	suite.Equalf("{\"name\":\"test\"}\n", string(parsedBody), "Body should be set to `{\"name\":\"test\"}\n`")
 }
 
-func (suite *ClientSuite) TestClient_newRequest_WithBodyBuildError() {
+func (suite *ClientTestSuite) TestClient_newRequest_WithBodyBuildError() {
 	body := make(chan int)
 	request, err := suite.client.newRequest(http.MethodPost, "/", body)
 	suite.Nilf(request, "Request should be nil")
@@ -101,7 +101,7 @@ type ClientDoResponse struct {
 	Message string `json:"message"`
 }
 
-func (suite *ClientSuite) TestClient_do_Ok() {
+func (suite *ClientTestSuite) TestClient_do_Ok() {
 	var doResponse *ClientDoResponse
 	request, requestError := suite.client.newRequest(http.MethodGet, "/ok", nil)
 	suite.Nilf(requestError, "Error should be nil")
