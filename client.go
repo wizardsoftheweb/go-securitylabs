@@ -19,6 +19,9 @@ import (
 	"net/url"
 )
 
+// Get the latest prod URL: https://apidocs.hunter2.com/#production
+var productionUrl, _ = url.Parse("https://securitylabs.veracode.com/")
+
 type ClientConfig struct {
 	BaseUrl *url.URL
 }
@@ -26,4 +29,21 @@ type ClientConfig struct {
 type Client struct {
 	Config     *ClientConfig
 	httpClient *http.Client
+}
+
+func NewClient(config *ClientConfig, httpClient *http.Client) *Client {
+	var newConfig *ClientConfig
+	var newHttpClient *http.Client
+	if nil == config {
+		newConfig = &ClientConfig{
+			BaseUrl: productionUrl,
+		}
+	}
+	if nil == httpClient {
+		newHttpClient = http.DefaultClient
+	}
+	return &Client{
+		Config:     newConfig,
+		httpClient: newHttpClient,
+	}
 }
