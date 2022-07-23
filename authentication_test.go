@@ -160,13 +160,14 @@ func (suite *AuthenticationTestSuite) TestClient_Req_Success() {
 }
 
 func (suite *AuthenticationTestSuite) TestClient_Req_NoAuth() {
-	client := NewClient(suite.serverUrl, nil)
-	request, requestGenerationErr := client.newRequest("GET", "/ok", nil)
+	suite.client.AuthKey = ""
+	suite.client.AuthSecret = ""
+	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil)
 	suite.Nilf(requestGenerationErr, "Should not return error when creating request")
 	var authResponse *ClientAuthResponse
-	response, responseError := client.do(context.Background(), request, &authResponse)
+	response, responseError := suite.client.do(context.Background(), request, &authResponse)
 	suite.Nilf(responseError, "Should not return error when making request")
-	suite.Equalf(http.StatusUnauthorized, response.StatusCode, "Should return 401 status code")
+	suite.Equalf(http.StatusForbidden, response.StatusCode, "Should return 403 status code")
 }
 
 func (suite *AuthenticationTestSuite) TestClient_Req_AuthMissing() {
