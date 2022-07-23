@@ -61,6 +61,14 @@ func usersTestHandler(w http.ResponseWriter, r *http.Request) {
 }`, page)))
 }
 
+// "/api/users/details?campaignIds=5f5f18ff9dad493352660d2a,5f5f19099dad493352660d2b&roleIds=5f5f190f9dad493352660d2c,5f5f19159dad493352660d2d&startTime=1600067874107&endTime=1600067881636&sort=name&sortType=ASC&phrase=Chris&limit=10&page=0"
+// responses pulled from
+// https://apidocs.hunter2.com/#get-users-details
+// I have no idea if these are actually what the API returns
+func usersDetailsTestHandler(w http.ResponseWriter, r *http.Request) {
+	//convertedPage, pageConversionErr := strconv.Atoi(r.URL.Query().Get("page"))
+}
+
 func TestClient_GetUsers(t *testing.T) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
