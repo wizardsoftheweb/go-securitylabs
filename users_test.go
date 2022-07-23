@@ -383,8 +383,31 @@ func (suite *UsersTestSuite) TearDownTest() {
 	suite.server.Close()
 }
 
-func (suite *UsersTestSuite) TestClient_GetUsers() {
+func (suite *UsersTestSuite) TestClient_GetUsers_NoPages() {
 	users, usersErr := suite.client.GetUsers(context.Background(), nil)
 	suite.Nilf(usersErr, "GetUsers() should not return an error")
 	suite.Truef(len(users) > 0, "GetUsers() should return at least one user")
+}
+
+func (suite *UsersTestSuite) TestClient_GetUsers_WithPages() {
+	page := new(int)
+	*page = 0
+	usersPage0, usersPage0Err := suite.client.GetUsers(context.Background(), &GetUsersOptions{
+		Page: page,
+	})
+	suite.Nilf(usersPage0Err, "GetUsers() should not return an error")
+	suite.Truef(len(usersPage0) > 0, "GetUsers() should return at least one user")
+	*page = 1
+	usersPage1, usersPage1Err := suite.client.GetUsers(context.Background(), &GetUsersOptions{
+		Page: page,
+	})
+	fmt.Println(usersPage1Err)
+	suite.Nilf(usersPage1Err, "GetUsers() should not return an error")
+	suite.Truef(len(usersPage1) > 0, "GetUsers() should return at least one user")
+	// TODO: How does the API handle pages that are out of range?
+	//*page = testMaxPage + 1
+	//users, usersErr = suite.client.GetUsers(context.Background(), &GetUsersOptions{
+	//	Page: page,
+	//})
+
 }
