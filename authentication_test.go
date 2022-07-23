@@ -18,6 +18,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
 	"strings"
 	"testing"
 
@@ -68,9 +69,11 @@ func authenticationTestMiddleware(next http.Handler) http.Handler {
 
 type AuthenticationTestSuite struct {
 	suite.Suite
-	server    *httptest.Server
-	serverUrl *url.URL
-	client    *Client
+	server             *httptest.Server
+	serverUrl          *url.URL
+	client             *Client
+	existingAuthKey    string
+	existingAuthSecret string
 }
 
 func TestAuthenticationTestSuite(t *testing.T) {
@@ -86,8 +89,30 @@ func (suite *AuthenticationTestSuite) SetupTest() {
 	suite.server = httptest.NewServer(mux)
 	suite.serverUrl, _ = url.Parse(suite.server.URL)
 	suite.client = NewClient(suite.serverUrl, nil)
+	suite.existingAuthKey = os.Getenv(EnvVslAuthKey)
+	suite.existingAuthSecret = os.Getenv(EnvVslAuthSecret)
+	suite.client.AuthKey = testKey
+	suite.client.AuthSecret = testSecret
+	_ = os.Unsetenv(EnvVslAuthKey)
+	_ = os.Unsetenv(EnvVslAuthSecret)
 }
 
 func (suite *AuthenticationTestSuite) TearDownTest() {
 	suite.server.Close()
+	if "" != suite.existingAuthKey {
+		_ = os.Setenv(EnvVslAuthKey, suite.existingAuthKey)
+	} else {
+		_ = os.Unsetenv(EnvVslAuthKey)
+	}
+	if "" != suite.existingAuthSecret {
+		_ = os.Setenv(EnvVslAuthSecret, suite.existingAuthSecret)
+	} else {
+		_ = os.Unsetenv(EnvVslAuthSecret)
+	}
 }
+
+//func (suite *AuthenticationTestSuite) TestClient_SetAuthFromEnvironment() {
+//	suite.client.AuthKey
+//	currentAuth := os.Getenv(EnvVslAuthKey)
+//
+//}
