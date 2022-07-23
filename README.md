@@ -42,7 +42,7 @@ In your code,
 
 ```go
 client := securitylabs.NewClient(nil, nil)
-_ = client.AuthFromEnvironment()
+_ = client.SetAuthFromEnvironment()
 ```
 
 ## References

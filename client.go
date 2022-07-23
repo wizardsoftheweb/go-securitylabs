@@ -59,9 +59,9 @@ func NewClient(baseUrl *url.URL, httpClient *http.Client) *Client {
 	}
 }
 
-// AuthFromEnvironment
+// SetAuthFromEnvironment
 // Pull authentication key and secret from environment variables; convenience method
-func (c *Client) AuthFromEnvironment() error {
+func (c *Client) SetAuthFromEnvironment() error {
 	c.AuthKey = os.Getenv(EnvVslAuthKey)
 	if "" == c.AuthKey {
 		return fmt.Errorf("VSL_AUTH_KEY is not set")
