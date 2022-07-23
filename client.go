@@ -15,6 +15,8 @@
 package vsl
 
 import (
+	"context"
+	"encoding/json"
 	"net/http"
 	"net/url"
 )
@@ -50,4 +52,22 @@ func NewClient(config *ClientConfig, httpClient *http.Client) *Client {
 		Config:     newConfig,
 		httpClient: newHttpClient,
 	}
+}
+
+// Primmary method to make a request to the API.
+func (c *Client) do(ctx context.Context, request *http.Request, v interface{}) (*http.Response, error) {
+	request = request.WithContext(ctx)
+	response, requestError := c.httpClient.Do(request)
+	if nil != requestError {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
+		return nil, requestError
+	}
+	defer (func() { _ = response.Body.Close() })()
+	parseError := json.NewDecoder(response.Body).Decode(v)
+	return response, parseError
+
 }
