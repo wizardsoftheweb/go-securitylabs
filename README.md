@@ -9,6 +9,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Overview](#overview)
+- [Usage](#usage)
+  - [Authentication](#authentication)
 - [References](#references)
 - [Notes](#notes)
 - [Tentative Roadmap](#tentative-roadmap)
@@ -21,6 +23,31 @@
 ## Overview
 
 My goal for this package is to provide a simple Go client for the Veracode Security Labs API.
+
+## Usage
+
+### Authentication
+
+Ideally you're not hardcoding creds in your code and you're instead using environment variables. In your shell,
+
+```bash
+export VSL_AUTH_KEY="<your-api-key>"
+export VSL_AUTH_SECRET="<your-api-secret>"
+```
+
+In your code,
+
+```go
+client := securitylabs.NewClient(nil, nil)
+_ = client.SetAuthFromEnvironment()
+```
+
+If you don't want to use the environment variables I've exposed or you want to pull them in some other way, you can do this instead:
+
+```go
+client := securitylabs.NewClient(nil, nil)
+client.SetAuth("<your-api-key>", "<your-api-secret>")
+```
 
 ## References
 

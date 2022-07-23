@@ -42,7 +42,7 @@ type GetUsersUsers struct {
 // This is the full body of the /api/user endpoint
 // https://apidocs.hunter2.com/#get-users
 type GetUsersResponse struct {
-	NextPage *int            `json:"nextPage"`
+	NextPage *string         `json:"nextPage"`
 	Users    []GetUsersUsers `json:"users"`
 }
 
@@ -55,7 +55,7 @@ type GetUsersOptions struct {
 
 func (c *Client) GetUsers() ([]GetUsersUsers, error) {
 	relativeUrl := &url.URL{Path: "/users"}
-	requestUrl := c.Config.BaseUrl.ResolveReference(relativeUrl)
+	requestUrl := c.BaseUrl.ResolveReference(relativeUrl)
 	request, requestGenerationErr := http.NewRequest("GET", requestUrl.String(), nil)
 	if nil != requestGenerationErr {
 		return nil, requestGenerationErr

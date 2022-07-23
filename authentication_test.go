@@ -15,14 +15,22 @@
 package vsl
 
 import (
+	"context"
 	"net/http"
+	"net/http/httptest"
+	"net/url"
+	"os"
 	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 const (
-	testKey           = "proper"
-	testSecret        = "secret"
-	testRotatedSecret = "rotated"
+	testKey            = "proper"
+	testSecret         = "secret"
+	testRotatedSecret  = "rotated"
+	testDisabledSecret = "disabled"
 )
 
 // Authorization responses pulled from
@@ -39,24 +47,151 @@ func authenticationTestMiddleware(next http.Handler) http.Handler {
 			}
 		}
 		if "" == authKey || "" == secret {
-			w.WriteHeader(http.StatusUnauthorized)
+			w.WriteHeader(http.StatusForbidden)
+			_, _ = w.Write([]byte("{\"message\":\"ApiCredential invalid\"}"))
 			return
 		}
 		if testKey != authKey {
 			w.WriteHeader(http.StatusNotFound)
-			_, _ = w.Write([]byte("{\"message\":\"missing\"}"))
+			_, _ = w.Write([]byte("{\"message\":\"ApiCredential missing\"}"))
 			return
+		} else {
+			if testSecret == secret {
+				next.ServeHTTP(w, r)
+			}
+			if testDisabledSecret == secret {
+				w.WriteHeader(http.StatusUnauthorized)
+				_, _ = w.Write([]byte("{\"message\":\"disabled\"}"))
+				return
+			}
+			if testRotatedSecret == secret {
+				w.WriteHeader(http.StatusUnauthorized)
+				_, _ = w.Write([]byte("{\"message\":\"rotated\"}"))
+				return
+			}
 		}
-		if testSecret != secret && testRotatedSecret != secret {
-			w.WriteHeader(http.StatusUnauthorized)
-			_, _ = w.Write([]byte("{\"message\":\"disabled\"}"))
-			return
-		}
-		if testRotatedSecret == secret {
-			w.WriteHeader(http.StatusUnauthorized)
-			_, _ = w.Write([]byte("{\"message\":\"rotated\"}"))
-			return
-		}
-		next.ServeHTTP(w, r)
 	})
+}
+
+type AuthenticationTestSuite struct {
+	suite.Suite
+	server             *httptest.Server
+	serverUrl          *url.URL
+	client             *Client
+	existingAuthKey    string
+	existingAuthSecret string
+}
+
+func TestAuthenticationTestSuite(t *testing.T) {
+	suite.Run(t, new(AuthenticationTestSuite))
+}
+
+func (suite *AuthenticationTestSuite) SetupTest() {
+	mux := http.NewServeMux()
+	mux.Handle("/ok", authenticationTestMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("{\"message\":\"ok\"}"))
+	})))
+	suite.server = httptest.NewServer(mux)
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+	suite.existingAuthKey = os.Getenv(EnvVslAuthKey)
+	suite.existingAuthSecret = os.Getenv(EnvVslAuthSecret)
+	suite.client.AuthKey = testKey
+	suite.client.AuthSecret = testSecret
+	_ = os.Unsetenv(EnvVslAuthKey)
+	_ = os.Unsetenv(EnvVslAuthSecret)
+}
+
+func (suite *AuthenticationTestSuite) TearDownTest() {
+	suite.server.Close()
+	if "" != suite.existingAuthKey {
+		_ = os.Setenv(EnvVslAuthKey, suite.existingAuthKey)
+	} else {
+		_ = os.Unsetenv(EnvVslAuthKey)
+	}
+	if "" != suite.existingAuthSecret {
+		_ = os.Setenv(EnvVslAuthSecret, suite.existingAuthSecret)
+	} else {
+		_ = os.Unsetenv(EnvVslAuthSecret)
+	}
+}
+
+func (suite *AuthenticationTestSuite) TestClient_SetAuthFromEnvironment() {
+	client := NewClient(suite.serverUrl, nil)
+	suite.NotEqualf(testKey, client.AuthKey, "AuthKey should be set from environment")
+	suite.NotEqualf(testSecret, client.AuthSecret, "AuthSecret should be set from environment")
+	noAuthKeyError := client.SetAuthFromEnvironment()
+	suite.NotNilf(noAuthKeyError, "Should return error if no AuthKey is set")
+	_ = os.Setenv(EnvVslAuthKey, testKey)
+	noAuthSecretError := client.SetAuthFromEnvironment()
+	suite.NotNilf(noAuthSecretError, "Should return error if no AuthSecret is set")
+	_ = os.Setenv(EnvVslAuthSecret, testSecret)
+	noError := client.SetAuthFromEnvironment()
+	suite.Nilf(noError, "SetAuthFromEnvironment should not return an error")
+	suite.Equalf(testKey, client.AuthKey, "AuthKey should be set from environment")
+	suite.Equalf(testSecret, client.AuthSecret, "AuthSecret should be set from environment")
+}
+
+func (suite *AuthenticationTestSuite) TestClient_SetAuth() {
+	client := NewClient(suite.serverUrl, nil)
+	suite.NotEqualf(testKey, client.AuthKey, "AuthKey should be set from fnc")
+	suite.NotEqualf(testSecret, client.AuthSecret, "AuthSecret should be set from fnc")
+	client.SetAuth(testKey, testSecret)
+	suite.Equalf(testKey, client.AuthKey, "AuthKey should be set from fnc")
+	suite.Equalf(testSecret, client.AuthSecret, "AuthSecret should be set from fnc")
+}
+
+type ClientAuthResponse struct {
+	Message string `json:"message"`
+}
+
+func (suite *AuthenticationTestSuite) TestClient_Req_Success() {
+	request, requestGenerationError := suite.client.newRequest("GET", "/ok", nil)
+	suite.Nilf(requestGenerationError, "Should not return error when generating request")
+	var authResponse *ClientAuthResponse
+	response, responseError := suite.client.do(context.Background(), request, &authResponse)
+	suite.Nilf(responseError, "Should not return error when making request")
+	suite.Equalf(http.StatusOK, response.StatusCode, "Should return status code 200")
+}
+
+func (suite *AuthenticationTestSuite) TestClient_Req_NoAuth() {
+	suite.client.AuthKey = ""
+	suite.client.AuthSecret = ""
+	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil)
+	suite.Nilf(requestGenerationErr, "Should not return error when creating request")
+	var authResponse *ClientAuthResponse
+	response, responseError := suite.client.do(context.Background(), request, &authResponse)
+	suite.Nilf(responseError, "Should not return error when making request")
+	suite.Equalf(http.StatusForbidden, response.StatusCode, "Should return 403 status code")
+}
+
+func (suite *AuthenticationTestSuite) TestClient_Req_AuthMissing() {
+	suite.client.AuthKey = "qqq"
+	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil)
+	suite.Nilf(requestGenerationErr, "Should not return error when creating request")
+	var authResponse *ClientAuthResponse
+	response, responseError := suite.client.do(context.Background(), request, &authResponse)
+	suite.Nilf(responseError, "Should not return error when making request")
+	suite.Equalf(http.StatusNotFound, response.StatusCode, "Should return 404 status code")
+}
+
+func (suite *AuthenticationTestSuite) TestClient_Req_AuthRotated() {
+	suite.client.AuthSecret = testRotatedSecret
+	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil)
+	suite.Nilf(requestGenerationErr, "Should not return error when creating request")
+	var authResponse *ClientAuthResponse
+	response, responseError := suite.client.do(context.Background(), request, &authResponse)
+	suite.Nilf(responseError, "Should not return error when making request")
+	suite.Equalf(http.StatusUnauthorized, response.StatusCode, "Should return 401 status code")
+}
+
+func (suite *AuthenticationTestSuite) TestClient_Req_AuthDisabled() {
+	suite.client.AuthSecret = testDisabledSecret
+	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil)
+	suite.Nilf(requestGenerationErr, "Should not return error when creating request")
+	var authResponse *ClientAuthResponse
+	response, responseError := suite.client.do(context.Background(), request, &authResponse)
+	suite.Nilf(responseError, "Should not return error when making request")
+	suite.Equalf(http.StatusUnauthorized, response.StatusCode, "Should return 401 status code")
 }

@@ -15,31 +15,38 @@
 package vsl
 
 import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 	"net/url"
+	"os"
+)
+
+const (
+	EnvVslAuthKey    = "VSL_AUTH_KEY"
+	EnvVslAuthSecret = "VSL_AUTH_SECRET"
 )
 
 // Get the latest prod URL: https://apidocs.hunter2.com/#production
 var productionUrl, _ = url.Parse("https://securitylabs.veracode.com/api/")
 
-type ClientConfig struct {
-	BaseUrl *url.URL
-}
-
 type Client struct {
-	Config     *ClientConfig
+	BaseUrl    *url.URL
+	AuthKey    string
+	AuthSecret string
 	httpClient *http.Client
 }
 
-func NewClient(config *ClientConfig, httpClient *http.Client) *Client {
-	var newConfig *ClientConfig
+func NewClient(baseUrl *url.URL, httpClient *http.Client) *Client {
 	var newHttpClient *http.Client
-	if nil == config {
-		newConfig = &ClientConfig{
-			BaseUrl: productionUrl,
-		}
+	var newBaseUrl *url.URL
+	if nil == baseUrl {
+		newBaseUrl = productionUrl
 	} else {
-		newConfig = config
+		newBaseUrl = baseUrl
 	}
 	if nil == httpClient {
 		newHttpClient = http.DefaultClient
@@ -47,7 +54,69 @@ func NewClient(config *ClientConfig, httpClient *http.Client) *Client {
 		newHttpClient = httpClient
 	}
 	return &Client{
-		Config:     newConfig,
+		BaseUrl:    newBaseUrl,
 		httpClient: newHttpClient,
 	}
+}
+
+// SetAuthFromEnvironment
+// Pull authentication key and secret from environment variables; convenience method
+func (c *Client) SetAuthFromEnvironment() error {
+	c.AuthKey = os.Getenv(EnvVslAuthKey)
+	if "" == c.AuthKey {
+		return fmt.Errorf("VSL_AUTH_KEY is not set")
+	}
+	c.AuthSecret = os.Getenv(EnvVslAuthSecret)
+	if "" == c.AuthSecret {
+		return fmt.Errorf("VSL_AUTH_SECRET is not set")
+	}
+	return nil
+}
+
+// SetAuth
+// Set the authentication key and secret
+func (c *Client) SetAuth(key, secret string) {
+	c.AuthKey = key
+	c.AuthSecret = secret
+}
+
+// Create a request to the API with the given method, path, and body
+// https://medium.com/@marcus.olsson/writing-a-go-client-for-your-restful-api-c193a2f4998c
+func (c *Client) newRequest(method, path string, body interface{}) (*http.Request, error) {
+	relativeUrl := &url.URL{Path: path}
+	fullUrl := c.BaseUrl.ResolveReference(relativeUrl)
+	var buffer io.ReadWriter
+	if nil != body {
+		buffer = new(bytes.Buffer)
+		jsonEncoderError := json.NewEncoder(buffer).Encode(body)
+		if nil != jsonEncoderError {
+			return nil, jsonEncoderError
+		}
+	}
+	request, _ := http.NewRequest(method, fullUrl.String(), buffer)
+	if nil != body {
+		request.Header.Set("Content-Type", "application/json")
+	}
+	request.Header.Set("Accept", "application/json")
+	request.Header.Set("Auth", fmt.Sprintf("%s:%s", c.AuthKey, c.AuthSecret))
+	return request, nil
+}
+
+// Primmary method to make a request to the API.
+// https://medium.com/@marcus.olsson/adding-context-and-options-to-your-go-client-package-244c4ad1231b
+func (c *Client) do(ctx context.Context, request *http.Request, v interface{}) (*http.Response, error) {
+	request = request.WithContext(ctx)
+	response, requestError := c.httpClient.Do(request)
+	// TODO: Figure out how to mock this error
+	if nil != requestError {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
+		return nil, requestError
+	}
+	defer (func() { _ = response.Body.Close() })()
+	parseError := json.NewDecoder(response.Body).Decode(v)
+	return response, parseError
 }
