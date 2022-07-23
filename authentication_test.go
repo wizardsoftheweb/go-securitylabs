@@ -150,6 +150,15 @@ type ClientAuthResponse struct {
 	Message string `json:"message"`
 }
 
+func (suite *AuthenticationTestSuite) TestClient_Req_Success() {
+	request, requestGenerationError := suite.client.newRequest("GET", "/ok", nil)
+	suite.Nilf(requestGenerationError, "Should not return error when generating request")
+	var authResponse *ClientAuthResponse
+	response, responseError := suite.client.do(context.Background(), request, &authResponse)
+	suite.Nilf(responseError, "Should not return error when making request")
+	suite.Equalf(http.StatusOK, response.StatusCode, "Should return status code 200")
+}
+
 func (suite *AuthenticationTestSuite) TestClient_Req_NoAuth() {
 	client := NewClient(suite.serverUrl, nil)
 	request, requestGenerationErr := client.newRequest("GET", "/ok", nil)
