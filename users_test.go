@@ -401,7 +401,6 @@ func (suite *UsersTestSuite) TestClient_GetUsers_WithPages() {
 	usersPage1, usersPage1Err := suite.client.GetUsers(context.Background(), &GetUsersOptions{
 		Page: page,
 	})
-	fmt.Println(usersPage1Err)
 	suite.Nilf(usersPage1Err, "GetUsers() should not return an error")
 	suite.Truef(len(usersPage1) > 0, "GetUsers() should return at least one user")
 	// TODO: How does the API handle pages that are out of range?
@@ -409,5 +408,4 @@ func (suite *UsersTestSuite) TestClient_GetUsers_WithPages() {
 	//users, usersErr = suite.client.GetUsers(context.Background(), &GetUsersOptions{
 	//	Page: page,
 	//})
-
 }
