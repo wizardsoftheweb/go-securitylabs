@@ -108,3 +108,11 @@ type UsersDetailsUsers struct {
 	Name                     string                   `json:"name"`
 	Roles                    []UsersDetailsUsersRoles `json:"roles"`
 }
+
+// UsersDetailsResponse
+// This is the full body of the /api/users/details endpoint
+// https://apidocs.hunter2.com/#get-users-details
+type UsersDetailsResponse struct {
+	Pages UsersDetailsPages   `json:"pages"`
+	Users []UsersDetailsUsers `json:"users"`
+}
