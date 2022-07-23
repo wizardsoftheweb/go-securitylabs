@@ -19,7 +19,11 @@ import (
 	"net/url"
 )
 
+type ClientConfig struct {
+	BaseUrl *url.URL
+}
+
 type Client struct {
-	BaseUrl    *url.URL
+	Config     *ClientConfig
 	httpClient *http.Client
 }
