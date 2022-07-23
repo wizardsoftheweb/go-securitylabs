@@ -50,7 +50,7 @@ type UsersResponse struct {
 // These are the query params for the /api/users endpoint
 // https://apidocs.hunter2.com/#get-users
 type UsersOptions struct {
-	Page string `query:"page"`
+	Page int `query:"page"`
 }
 
 func (c *Client) GetUsers() ([]UsersUsers, error) {

@@ -19,9 +19,9 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"strconv"
 	"testing"
 
+	"github.com/hetiansu5/urlquery"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -34,16 +34,13 @@ const (
 // https://apidocs.hunter2.com/#get-users
 // I have no idea if these are actually what the API returns
 func usersTestHandler(w http.ResponseWriter, r *http.Request) {
-	convertedPage, pageConversionErr := strconv.Atoi(r.URL.Query().Get("page"))
-	// TODO: Does the API actually handle negative pages?
-	if pageConversionErr != nil || 0 > convertedPage {
-		convertedPage = 0
-	}
+	var params UsersOptions
+	_ = urlquery.Unmarshal([]byte(r.URL.RawQuery), &params)
 	var page string
-	if convertedPage > testMaxPage {
+	if params.Page > testMaxPage {
 		page = "null"
 	} else {
-		page = fmt.Sprintf("\"/api/users?page=%d\"", convertedPage+1)
+		page = fmt.Sprintf("\"/api/users?page=%d\"", params.Page+1)
 	}
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(fmt.Sprintf(`{
@@ -62,13 +59,22 @@ func usersTestHandler(w http.ResponseWriter, r *http.Request) {
 }`, page)))
 }
 
-// "/api/users/details?campaignIds=5f5f18ff9dad493352660d2a,5f5f19099dad493352660d2b&roleIds=5f5f190f9dad493352660d2c,5f5f19159dad493352660d2d&startTime=1600067874107&endTime=1600067881636&sort=name&sortType=ASC&phrase=Chris&limit=10&page=0"
-// responses pulled from
-// https://apidocs.hunter2.com/#get-users-details
-// I have no idea if these are actually what the API returns
-func usersDetailsTestHandler(w http.ResponseWriter, r *http.Request) {
-	//convertedPage, pageConversionErr := strconv.Atoi(r.URL.Query().Get("page"))
-}
+//// "/api/users/details?campaignIds=5f5f18ff9dad493352660d2a,5f5f19099dad493352660d2b&roleIds=5f5f190f9dad493352660d2c,5f5f19159dad493352660d2d&startTime=1600067874107&endTime=1600067881636&sort=name&sortType=ASC&phrase=Chris&limit=10&page=0"
+//// responses pulled from
+//// https://apidocs.hunter2.com/#get-users-details
+//// I have no idea if these are actually what the API returns
+//func usersDetailsTestHandler(w http.ResponseWriter, r *http.Request) {
+//	convertedPage, pageConversionErr := strconv.Atoi(r.URL.Query().Get("page"))
+//	if pageConversionErr != nil || 0 > convertedPage {
+//		convertedPage = 0
+//	}
+//	//var nextPage, previousPage string
+//	//if convertedPage > testMaxPage {
+//	//	nextPage = "null"
+//	//} else {
+//	//
+//	//}
+//}
 
 func TestClient_GetUsers(t *testing.T) {
 	mux := http.NewServeMux()
