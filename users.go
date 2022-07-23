@@ -20,22 +20,22 @@ import (
 	"net/url"
 )
 
-// Roles
+// UsersRoles
 // This is a list of roles attached to a user
 // https://apidocs.hunter2.com/#get-users
-type Roles []string
+type UsersRoles []string
 
 // Users
 // These are all the properties of a user from the /api/user endpoint
 // https://apidocs.hunter2.com/#get-users
 type Users struct {
-	Id         string `json:"id"`
-	IsAdmin    bool   `json:"isAdmin"`
-	IsDisabled bool   `json:"isDisabled"`
-	Email      string `json:"email"`
-	Joined     bool   `json:"joined"`
-	LastActive int64  `json:"lastActive"`
-	Roles      Roles  `json:"roles"`
+	Id         string     `json:"id"`
+	IsAdmin    bool       `json:"isAdmin"`
+	IsDisabled bool       `json:"isDisabled"`
+	Email      string     `json:"email"`
+	Joined     bool       `json:"joined"`
+	LastActive int64      `json:"lastActive"`
+	Roles      UsersRoles `json:"roles"`
 }
 
 // UsersResponse
