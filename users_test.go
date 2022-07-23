@@ -15,13 +15,51 @@
 package vsl
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+const (
+	testMaxPage = 10
+)
+
+// /api/users?page=1 responses pulled from
+// https://apidocs.hunter2.com/#get-users
+// I have no idea if these are actually what the API returns
+func usersTestHandler(w http.ResponseWriter, r *http.Request) {
+	convertedPage, pageConversionErr := strconv.Atoi(r.URL.Query().Get("page"))
+	// TODO: Does the API actually handle negative pages?
+	if pageConversionErr != nil || 0 > convertedPage {
+		convertedPage = 0
+	}
+	var page string
+	if convertedPage > testMaxPage {
+		page = "null"
+	} else {
+		page = fmt.Sprintf("/api/users?page=%d", convertedPage+1)
+	}
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(fmt.Sprintf(`{
+  "nextPage" : "%s",
+  "users": [{
+    "id": "3bd68695e165af6ced227afc",
+    "isAdmin": true,
+    "isDisabled": false,
+    "email": "developer@hunter2.com",
+    "joined": true,
+    "lastActive": 1557981546394,
+    "roles": [
+      "Developers"
+    ]
+  }]
+}`, page)))
+}
 
 func TestClient_GetUsers(t *testing.T) {
 	mux := http.NewServeMux()
