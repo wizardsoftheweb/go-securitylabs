@@ -15,9 +15,12 @@
 package vsl
 
 import (
-	"encoding/json"
+	"context"
 	"net/http"
-	"net/url"
+)
+
+const (
+	GetUsersPath = "/users"
 )
 
 // GetUsersUsersRoles
@@ -53,23 +56,15 @@ type GetUsersOptions struct {
 	Page *int `query:"page"`
 }
 
-func (c *Client) GetUsers() ([]GetUsersUsers, error) {
-	relativeUrl := &url.URL{Path: "/users"}
-	requestUrl := c.BaseUrl.ResolveReference(relativeUrl)
-	request, requestGenerationErr := http.NewRequest("GET", requestUrl.String(), nil)
-	if nil != requestGenerationErr {
-		return nil, requestGenerationErr
-	}
-	request.Header.Set("Accept", "application/json")
-	response, responseErr := c.httpClient.Do(request)
-	if nil != responseErr {
-		return nil, responseErr
-	}
-	defer (func() { _ = response.Body.Close() })()
+func (c *Client) GetUsers(ctx context.Context, options *GetUsersOptions) ([]GetUsersUsers, error) {
+	// The only way to generate an error from Client.newRequest is if the body can't build
+	// Since we have no body, we can safely ignore the error
+	request, _ := c.newRequest(http.MethodGet, GetUsersPath, options, nil)
 	var responseBody GetUsersResponse
-	decodeErr := json.NewDecoder(response.Body).Decode(&responseBody)
-	if nil != decodeErr {
-		return nil, decodeErr
+	// TODO: Verify error makes sense once Client.do has been fully tested
+	_, responseError := c.do(ctx, request, &responseBody)
+	if nil != responseError {
+		return nil, responseError
 	}
 	return responseBody.Users, nil
 }

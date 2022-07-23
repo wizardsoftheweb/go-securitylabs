@@ -23,6 +23,8 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+
+	"github.com/hetiansu5/urlquery"
 )
 
 const (
@@ -82,9 +84,10 @@ func (c *Client) SetAuth(key, secret string) {
 
 // Create a request to the API with the given method, path, and body
 // https://medium.com/@marcus.olsson/writing-a-go-client-for-your-restful-api-c193a2f4998c
-func (c *Client) newRequest(method, path string, body interface{}) (*http.Request, error) {
+func (c *Client) newRequest(method, path string, options, body interface{}) (*http.Request, error) {
 	relativeUrl := &url.URL{Path: path}
 	fullUrl := c.BaseUrl.ResolveReference(relativeUrl)
+	compiledUrl := c.attachQueryParams(fullUrl.String(), options)
 	var buffer io.ReadWriter
 	if nil != body {
 		buffer = new(bytes.Buffer)
@@ -93,7 +96,7 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 			return nil, jsonEncoderError
 		}
 	}
-	request, _ := http.NewRequest(method, fullUrl.String(), buffer)
+	request, _ := http.NewRequest(method, compiledUrl, buffer)
 	if nil != body {
 		request.Header.Set("Content-Type", "application/json")
 	}
@@ -119,4 +122,16 @@ func (c *Client) do(ctx context.Context, request *http.Request, v interface{}) (
 	defer (func() { _ = response.Body.Close() })()
 	parseError := json.NewDecoder(response.Body).Decode(v)
 	return response, parseError
+}
+
+func (c *Client) attachQueryParams(path string, options interface{}) string {
+	if nil == options {
+		return path
+	}
+	rawParams, _ := urlquery.Marshal(options)
+	params := string(rawParams)
+	if "" == params {
+		return path
+	}
+	return fmt.Sprintf("%s?%s", path, params)
 }

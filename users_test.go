@@ -15,6 +15,7 @@
 package vsl
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -23,8 +24,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/suite"
+
 	"github.com/hetiansu5/urlquery"
-	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -358,32 +360,52 @@ func handlerDeleteUser(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write([]byte("{}"))
 }
 
-func TestClient_GetUsers(t *testing.T) {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{
-  "nextPage" : "/api/users?page=1",
-  "users": [{
-    "id": "3bd68695e165af6ced227afc",
-    "isAdmin": true,
-    "isDisabled": false,
-    "email": "developer@hunter2.com",
-    "joined": true,
-    "lastActive": 1557981546394,
-    "roles": [
-      "Developers"
-    ]
-  }]
+type UsersTestSuite struct {
+	suite.Suite
+	server    *httptest.Server
+	serverUrl *url.URL
+	client    *Client
 }
-`))
+
+func TestUsersTestSuite(t *testing.T) {
+	suite.Run(t, new(UsersTestSuite))
+}
+
+func (suite *UsersTestSuite) SetupTest() {
+	mux := http.NewServeMux()
+	mux.Handle("/users", http.HandlerFunc(handlerGetUsers))
+	suite.server = httptest.NewServer(mux)
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+}
+
+func (suite *UsersTestSuite) TearDownTest() {
+	suite.server.Close()
+}
+
+func (suite *UsersTestSuite) TestClient_GetUsers_NoPages() {
+	users, usersErr := suite.client.GetUsers(context.Background(), nil)
+	suite.Nilf(usersErr, "GetUsers() should not return an error")
+	suite.Truef(len(users) > 0, "GetUsers() should return at least one user")
+}
+
+func (suite *UsersTestSuite) TestClient_GetUsers_WithPages() {
+	page := new(int)
+	*page = 0
+	usersPage0, usersPage0Err := suite.client.GetUsers(context.Background(), &GetUsersOptions{
+		Page: page,
 	})
-	testServer := httptest.NewServer(mux)
-	defer testServer.Close()
-	testServerUrl, _ := url.Parse(testServer.URL)
-	client := NewClient(testServerUrl, nil)
-	assert.Equalf(t, testServerUrl, client.BaseUrl, "BaseUrl should be set")
-	users, err := client.GetUsers()
-	assert.Nilf(t, err, "Response error should be nil")
-	assert.Equal(t, 1, len(users))
+	suite.Nilf(usersPage0Err, "GetUsers() should not return an error")
+	suite.Truef(len(usersPage0) > 0, "GetUsers() should return at least one user")
+	*page = 1
+	usersPage1, usersPage1Err := suite.client.GetUsers(context.Background(), &GetUsersOptions{
+		Page: page,
+	})
+	suite.Nilf(usersPage1Err, "GetUsers() should not return an error")
+	suite.Truef(len(usersPage1) > 0, "GetUsers() should return at least one user")
+	// TODO: How does the API handle pages that are out of range?
+	//*page = testMaxPage + 1
+	//users, usersErr = suite.client.GetUsers(context.Background(), &GetUsersOptions{
+	//	Page: page,
+	//})
 }
