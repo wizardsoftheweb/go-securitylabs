@@ -87,3 +87,11 @@ type UsersDetailsPages struct {
 	NextUrl     string `json:"nextUrl"`
 	PreviousUrl string `json:"previousUrl"`
 }
+
+// UsersDetailsRoles
+// This is the format of the roles object on the /api/users/details endpoint
+// https://apidocs.hunter2.com/#get-users-details
+type UsersDetailsRoles struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
