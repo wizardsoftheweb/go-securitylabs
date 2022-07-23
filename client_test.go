@@ -39,26 +39,33 @@ func TestNewClient(t *testing.T) {
 	assert.NotEqualf(t, clientWithHttpClient.httpClient, http.DefaultClient, "httpClient should not be set to http.DefaultClient")
 }
 
-type ClientNewRequestSuite struct {
+type ClientSuite struct {
 	suite.Suite
 	server    *httptest.Server
 	serverUrl *url.URL
 	client    *Client
 }
 
-func TestClientNewRequestSuite(t *testing.T) {
-	suite.Run(t, new(ClientNewRequestSuite))
+func TestClientSuite(t *testing.T) {
+	suite.Run(t, new(ClientSuite))
 }
 
-func (suite *ClientNewRequestSuite) SetupTest() {
+func (suite *ClientSuite) SetupTest() {
 	mux := http.NewServeMux()
+	mux.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("{\"message\":\"ok\"}"))
+	})
 	suite.server = httptest.NewServer(mux)
-	defer suite.server.Close()
 	suite.serverUrl, _ = url.Parse(suite.server.URL)
 	suite.client = NewClient(suite.serverUrl, nil)
 }
 
-func (suite *ClientNewRequestSuite) TestClient_newRequest_Empty() {
+func (suite *ClientSuite) TearDownTest() {
+	suite.server.Close()
+}
+
+func (suite *ClientSuite) TestClient_newRequest_Empty() {
 	request, err := suite.client.newRequest(http.MethodGet, "/", nil)
 	suite.Nilf(err, "Error should be nil")
 	suite.NotNilf(request, "Request should not be nil")
@@ -67,7 +74,7 @@ func (suite *ClientNewRequestSuite) TestClient_newRequest_Empty() {
 	suite.Nilf(request.Body, "Body should be nil")
 }
 
-func (suite *ClientNewRequestSuite) TestClient_newRequest_WithBody() {
+func (suite *ClientSuite) TestClient_newRequest_WithBody() {
 	body := struct {
 		Name string `json:"name"`
 	}{Name: "test"}
@@ -83,7 +90,7 @@ func (suite *ClientNewRequestSuite) TestClient_newRequest_WithBody() {
 	suite.Equalf("{\"name\":\"test\"}\n", string(parsedBody), "Body should be set to `{\"name\":\"test\"}\n`")
 }
 
-func (suite *ClientNewRequestSuite) TestClient_newRequest_WithBodyBuildError() {
+func (suite *ClientSuite) TestClient_newRequest_WithBodyBuildError() {
 	body := make(chan int)
 	request, err := suite.client.newRequest(http.MethodPost, "/", body)
 	suite.Nilf(request, "Request should be nil")
@@ -94,22 +101,13 @@ type ClientDoResponse struct {
 	Message string `json:"message"`
 }
 
-func TestClient_Do(t *testing.T) {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("{\"message\":\"ok\"}"))
-	})
-	server := httptest.NewServer(mux)
-	defer server.Close()
-	testServerUrl, _ := url.Parse(server.URL)
-	client := NewClient(testServerUrl, nil)
-	assert.NotNilf(t, client, "Client should not be nil")
+func (suite *ClientSuite) TestClient_do_Ok() {
 	var doResponse *ClientDoResponse
-	request, _ := client.newRequest(http.MethodGet, "/ok", nil)
-	response, err := client.do(context.Background(), request, &doResponse)
-	assert.Nilf(t, err, "Error should be nil")
-	assert.Equalf(t, http.StatusOK, response.StatusCode, "StatusCode should be 200")
-	assert.NotNilf(t, doResponse, "doResponse should not be nil")
-	assert.Equalf(t, "ok", doResponse.Message, "Message should be ok")
+	request, requestError := suite.client.newRequest(http.MethodGet, "/ok", nil)
+	suite.Nilf(requestError, "Error should be nil")
+	response, responseError := suite.client.do(context.Background(), request, &doResponse)
+	suite.Nilf(responseError, "Error should be nil")
+	suite.Equalf(http.StatusOK, response.StatusCode, "StatusCode should be 200")
+	suite.NotNilf(doResponse, "doResponse should not be nil")
+	suite.Equalf("ok", doResponse.Message, "Message should be ok")
 }
