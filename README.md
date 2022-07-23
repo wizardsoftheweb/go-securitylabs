@@ -43,47 +43,47 @@ None of these are in any particular order.
 - [ ] Learn how to use `httptest.Server`
 - [ ] Mock all [the available URLs](https://apidocs.hunter2.com/#endpoints)
   - [ ] Authentication
-  - Users
+  - [ ] Users
     - [ ] GET /api/users?page=0
     - [ ] GET /api/users/details?page=0
     - [ ] GET /api/users/:id/progress
     - [ ] PUT /api/users/:id
     - [ ] DELETE /api/users/:id
-  - Summaries
+  - [ ] Summaries
     - [ ] GET /api/onboarding?page=0
     - [ ] GET /api/progress?page=0
     - [ ] GET /api/campaigns/progress?page=0
     - [ ] GET /api/engagement/time
-  - Lessons
+  - [ ] Lessons
     - [ ] GET /api/lessons?page=0
     - [ ] GET /api/lessons/:id/progress?page=0
     - [ ] GET /api/lessons/search
-  - Roles
+  - [ ] Roles
     - [ ] GET /api/roles
     - [ ] GET /api/roles/:id/progress?page=0
-  - Invites
+  - [ ] Invites
     - [ ] POST /api/invites
 - [ ] Develop wrappers for [each endpoint](https://apidocs.hunter2.com/#endpoints)
   - [ ] Authentication
-  - Users
+  - [ ] Users
     - [ ] GET /api/users?page=0
     - [ ] GET /api/users/details?page=0
     - [ ] GET /api/users/:id/progress
     - [ ] PUT /api/users/:id
     - [ ] DELETE /api/users/:id
-  - Summaries
+  - [ ] Summaries
     - [ ] GET /api/onboarding?page=0
     - [ ] GET /api/progress?page=0
     - [ ] GET /api/campaigns/progress?page=0
     - [ ] GET /api/engagement/time
-  - Lessons
+  - [ ] Lessons
     - [ ] GET /api/lessons?page=0
     - [ ] GET /api/lessons/:id/progress?page=0
     - [ ] GET /api/lessons/search
-  - Roles
+  - [ ] Roles
     - [ ] GET /api/roles
     - [ ] GET /api/roles/:id/progress?page=0
-  - Invites
+  - [ ] Invites
     - [ ] POST /api/invites
 
 ### Housekeeping
