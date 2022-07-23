@@ -73,7 +73,7 @@ func listContains(list []string, item string) bool {
 // responses pulled from
 // https://apidocs.hunter2.com/#get-users
 // I have no idea if these are actually what the API returns
-func handlerUsers(w http.ResponseWriter, r *http.Request) {
+func handlerGetUsers(w http.ResponseWriter, r *http.Request) {
 	var params GetUsersOptions
 	_ = urlquery.Unmarshal([]byte(r.URL.RawQuery), &params)
 	var page string
@@ -103,7 +103,7 @@ func handlerUsers(w http.ResponseWriter, r *http.Request) {
 // responses pulled from
 // https://apidocs.hunter2.com/#get-users-details
 // I have no idea if these are actually what the API returns
-func usersDetailsTestHandler(w http.ResponseWriter, r *http.Request) {
+func usersGetUsersDetailsTestHandler(w http.ResponseWriter, r *http.Request) {
 	var params GetUsersDetailsOptions
 	_ = urlquery.Unmarshal([]byte(r.URL.RawQuery), &params)
 	for _, campaignId := range params.CampaignIds {
