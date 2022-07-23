@@ -20,7 +20,7 @@ import (
 )
 
 // Get the latest prod URL: https://apidocs.hunter2.com/#production
-var productionUrl, _ = url.Parse("https://securitylabs.veracode.com/")
+var productionUrl, _ = url.Parse("https://securitylabs.veracode.com/api/")
 
 type ClientConfig struct {
 	BaseUrl *url.URL
