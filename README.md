@@ -42,6 +42,7 @@ None of these are in any particular order.
 - [ ] Get something simple pulled out of the wrapper article
 - [ ] Learn how to use `httptest.Server`
 - [ ] Mock all [the available URLs](https://apidocs.hunter2.com/#endpoints)
+  - [ ] Authentication
   - Users
     - [ ] GET /api/users?page=0
     - [ ] GET /api/users/details?page=0
@@ -63,6 +64,7 @@ None of these are in any particular order.
   - Invites
     - [ ] POST /api/invites
 - [ ] Develop wrappers for [each endpoint](https://apidocs.hunter2.com/#endpoints)
+  - [ ] Authentication
   - Users
     - [ ] GET /api/users?page=0
     - [ ] GET /api/users/details?page=0
