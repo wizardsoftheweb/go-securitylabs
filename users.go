@@ -42,7 +42,7 @@ type UsersUsers struct {
 // This is the full body of the /api/user endpoint
 // https://apidocs.hunter2.com/#get-users
 type UsersResponse struct {
-	NextPage string       `json:"nextPage"`
+	NextPage *int         `json:"nextPage"`
 	Users    []UsersUsers `json:"users"`
 }
 
@@ -78,14 +78,14 @@ func (c *Client) GetUsers() ([]UsersUsers, error) {
 // This is the format of the pages object on the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
 type UsersDetailsPages struct {
-	Current     int    `json:"current"`
-	Previous    int    `json:"previous"`
-	Next        int    `json:"next"`
-	Limit       int    `json:"limit"`
-	Total       int    `json:"total"`
-	CurrentUrl  string `json:"currentUrl"`
-	NextUrl     string `json:"nextUrl"`
-	PreviousUrl string `json:"previousUrl"`
+	Current     int     `json:"current"`
+	Previous    *int    `json:"previous"`
+	Next        *int    `json:"next"`
+	Limit       int     `json:"limit"`
+	Total       int     `json:"total"`
+	CurrentUrl  string  `json:"currentUrl"`
+	NextUrl     *string `json:"nextUrl"`
+	PreviousUrl *string `json:"previousUrl"`
 }
 
 // UsersDetailsUsersRoles
@@ -101,7 +101,7 @@ type UsersDetailsUsersRoles struct {
 // https://apidocs.hunter2.com/#get-users-details
 type UsersDetailsUsers struct {
 	Id                       string                   `json:"id"`
-	LastActive               int64                    `json:"lastActive"`
+	LastActive               *int64                   `json:"lastActive"`
 	LabsCompleted            int                      `json:"labsCompleted"`
 	PercentRequiredCompleted float64                  `json:"percentRequiredCompleted"`
 	Points                   int                      `json:"points"`
