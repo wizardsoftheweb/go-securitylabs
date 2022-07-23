@@ -252,6 +252,41 @@ func usersGetUsersDetailsTestHandler(w http.ResponseWriter, r *http.Request) {
 }`, string(pagesBytes))))
 }
 
+// /api/users/:id/progress
+// responses pulled from
+// https://apidocs.hunter2.com/#get-user-progress
+// I have no idea if these are actually what the API returns
+func handlerGetUserProgress(w http.ResponseWriter, r *http.Request) {
+	userId := strings.Replace(r.URL.RequestURI(), "/api/user/", "", 1)
+	// TODO: How to test ID validity?
+	if 24 != len(userId) {
+		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write([]byte("{\"message\":\"User id is invalid\"}"))
+		return
+	}
+	if !listContains(testExistingUserIds, userId) {
+		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write([]byte("{\"message\":\"User not found\"}"))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(`{
+  "pointsRequired": 10,
+  "pointsPossible": 30,
+  "lessons": [{
+    "module": "OWASP #1: Injection",
+    "lessonId": "5a5999d4ca50092ec5345ec4",
+    "lessonName": "Own the database",
+    "lastVisited": "3/4/2019",
+    "status": "Started",
+    "minutes": 1216.9,
+    "points": 0,
+    "startRating": 1,
+    "endRating": 2
+  }]
+}`))
+}
+
 // /api/users/:id
 // responses pulled from
 // https://apidocs.hunter2.com/#put-user
