@@ -11,6 +11,7 @@
 - [Overview](#overview)
 - [Usage](#usage)
   - [Authentication](#authentication)
+  - [Users](#users)
 - [References](#references)
 - [Notes](#notes)
 - [Tentative Roadmap](#tentative-roadmap)
@@ -47,6 +48,22 @@ If you don't want to use the environment variables I've exposed or you want to p
 ```go
 client := securitylabs.NewClient(nil, nil)
 client.SetAuth("<your-api-key>", "<your-api-secret>")
+```
+
+### Users
+
+[Docs](https://apidocs.hunter2.com/#users-2)
+
+```go
+client.GetUsers(context.Background(), nil)
+// Returns a list of users from the first page
+```
+
+```go
+page := new(int)
+*page = 47
+client.GetUser(context.Background(), &GetUsersOptions{Page: page})
+// Returns a list of users from the nth page
 ```
 
 ## References
