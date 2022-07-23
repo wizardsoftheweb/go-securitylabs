@@ -14,6 +14,7 @@
 - [Tentative Roadmap](#tentative-roadmap)
   - [Library](#library)
   - [Housekeeping](#housekeeping)
+    - [`golangci-lint`](#golangci-lint)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -47,3 +48,8 @@ None of these are in any particular order.
 
 - [ ] Set up CI pipelines (GHA? CircleCI?)
 - [ ] Define nice status checks like code coverage
+
+#### `golangci-lint`
+
+- [ ] Reenable `unused`
+- [ ] Follow `structcheck` issue fix for Go 1.18
