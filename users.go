@@ -95,3 +95,16 @@ type UsersDetailsRoles struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
+
+// UsersDetails
+// This is the format of the users object on the /api/users/details endpoint
+// https://apidocs.hunter2.com/#get-users-details
+type UsersDetails struct {
+	Id                       string              `json:"id"`
+	LastActive               int64               `json:"lastActive"`
+	LabsCompleted            int                 `json:"labsCompleted"`
+	PercentRequiredCompleted float64             `json:"percentRequiredCompleted"`
+	Points                   int                 `json:"points"`
+	Name                     string              `json:"name"`
+	Roles                    []UsersDetailsRoles `json:"roles"`
+}
