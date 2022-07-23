@@ -20,8 +20,14 @@ import (
 	"net/url"
 )
 
+// Roles
+// This is a list of roles attached to a user
+// https://apidocs.hunter2.com/#get-users
 type Roles []string
 
+// Users
+// These are all the properties of a user from the /api/user endpoint
+// https://apidocs.hunter2.com/#get-users
 type Users struct {
 	Id         string `json:"id"`
 	IsAdmin    bool   `json:"isAdmin"`
@@ -32,6 +38,9 @@ type Users struct {
 	Roles      Roles  `json:"roles"`
 }
 
+// UsersResponse
+// This is the full body of the /api/user endpoint
+// https://apidocs.hunter2.com/#get-users
 type UsersResponse struct {
 	NextPage string  `json:"nextPage"`
 	Users    []Users `json:"users"`
