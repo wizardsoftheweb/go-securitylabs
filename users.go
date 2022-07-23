@@ -59,11 +59,7 @@ type GetUsersOptions struct {
 func (c *Client) GetUsers(ctx context.Context, options *GetUsersOptions) ([]GetUsersUsers, error) {
 	// The only way to generate an error from Client.newRequest is if the body can't build
 	// Since we have no body, we can safely ignore the error
-	request, _ := c.newRequest(
-		http.MethodGet,
-		c.buildRelativePath(GetUsersPath, options),
-		nil,
-	)
+	request, _ := c.newRequest(http.MethodGet, GetUsersPath, options, nil)
 	var responseBody GetUsersResponse
 	// TODO: Verify error makes sense once Client.do has been fully tested
 	_, responseError := c.do(ctx, request, &responseBody)

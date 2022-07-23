@@ -84,9 +84,10 @@ func (c *Client) SetAuth(key, secret string) {
 
 // Create a request to the API with the given method, path, and body
 // https://medium.com/@marcus.olsson/writing-a-go-client-for-your-restful-api-c193a2f4998c
-func (c *Client) newRequest(method, path string, body interface{}) (*http.Request, error) {
+func (c *Client) newRequest(method, path string, options, body interface{}) (*http.Request, error) {
 	relativeUrl := &url.URL{Path: path}
 	fullUrl := c.BaseUrl.ResolveReference(relativeUrl)
+	compiledUrl := c.buildRelativePath(fullUrl.String(), options)
 	var buffer io.ReadWriter
 	if nil != body {
 		buffer = new(bytes.Buffer)
@@ -95,7 +96,7 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 			return nil, jsonEncoderError
 		}
 	}
-	request, _ := http.NewRequest(method, fullUrl.String(), buffer)
+	request, _ := http.NewRequest(method, compiledUrl, buffer)
 	if nil != body {
 		request.Header.Set("Content-Type", "application/json")
 	}

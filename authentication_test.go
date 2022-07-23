@@ -147,7 +147,7 @@ type ClientAuthResponse struct {
 }
 
 func (suite *AuthenticationTestSuite) TestClient_Req_Success() {
-	request, requestGenerationError := suite.client.newRequest("GET", "/ok", nil)
+	request, requestGenerationError := suite.client.newRequest("GET", "/ok", nil, nil)
 	suite.Nilf(requestGenerationError, "Should not return error when generating request")
 	var authResponse *ClientAuthResponse
 	response, responseError := suite.client.do(context.Background(), request, &authResponse)
@@ -158,7 +158,7 @@ func (suite *AuthenticationTestSuite) TestClient_Req_Success() {
 func (suite *AuthenticationTestSuite) TestClient_Req_NoAuth() {
 	suite.client.AuthKey = ""
 	suite.client.AuthSecret = ""
-	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil)
+	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil, nil)
 	suite.Nilf(requestGenerationErr, "Should not return error when creating request")
 	var authResponse *ClientAuthResponse
 	response, responseError := suite.client.do(context.Background(), request, &authResponse)
@@ -168,7 +168,7 @@ func (suite *AuthenticationTestSuite) TestClient_Req_NoAuth() {
 
 func (suite *AuthenticationTestSuite) TestClient_Req_AuthMissing() {
 	suite.client.AuthKey = "qqq"
-	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil)
+	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil, nil)
 	suite.Nilf(requestGenerationErr, "Should not return error when creating request")
 	var authResponse *ClientAuthResponse
 	response, responseError := suite.client.do(context.Background(), request, &authResponse)
@@ -178,7 +178,7 @@ func (suite *AuthenticationTestSuite) TestClient_Req_AuthMissing() {
 
 func (suite *AuthenticationTestSuite) TestClient_Req_AuthRotated() {
 	suite.client.AuthSecret = testRotatedSecret
-	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil)
+	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil, nil)
 	suite.Nilf(requestGenerationErr, "Should not return error when creating request")
 	var authResponse *ClientAuthResponse
 	response, responseError := suite.client.do(context.Background(), request, &authResponse)
@@ -188,7 +188,7 @@ func (suite *AuthenticationTestSuite) TestClient_Req_AuthRotated() {
 
 func (suite *AuthenticationTestSuite) TestClient_Req_AuthDisabled() {
 	suite.client.AuthSecret = testDisabledSecret
-	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil)
+	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil, nil)
 	suite.Nilf(requestGenerationErr, "Should not return error when creating request")
 	var authResponse *ClientAuthResponse
 	response, responseError := suite.client.do(context.Background(), request, &authResponse)

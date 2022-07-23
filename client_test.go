@@ -66,7 +66,7 @@ func (suite *ClientTestSuite) TearDownTest() {
 }
 
 func (suite *ClientTestSuite) TestClient_newRequest_Empty() {
-	request, err := suite.client.newRequest(http.MethodGet, "/", nil)
+	request, err := suite.client.newRequest(http.MethodGet, "/", nil, nil)
 	suite.Nilf(err, "Error should be nil")
 	suite.NotNilf(request, "Request should not be nil")
 	suite.Equalf(http.MethodGet, request.Method, "Method should be set to http.MethodGet")
@@ -78,7 +78,7 @@ func (suite *ClientTestSuite) TestClient_newRequest_WithBody() {
 	body := struct {
 		Name string `json:"name"`
 	}{Name: "test"}
-	request, err := suite.client.newRequest(http.MethodPost, "/", body)
+	request, err := suite.client.newRequest(http.MethodPost, "/", nil, body)
 	suite.Nilf(err, "Error should be nil")
 	suite.NotNilf(request, "Request should not be nil")
 	suite.Equalf(http.MethodPost, request.Method, "Method should be set to http.MethodPost")
@@ -92,7 +92,7 @@ func (suite *ClientTestSuite) TestClient_newRequest_WithBody() {
 
 func (suite *ClientTestSuite) TestClient_newRequest_WithBodyBuildError() {
 	body := make(chan int)
-	request, err := suite.client.newRequest(http.MethodPost, "/", body)
+	request, err := suite.client.newRequest(http.MethodPost, "/", nil, body)
 	suite.Nilf(request, "Request should be nil")
 	suite.NotNilf(err, "Error should not be nil")
 }
@@ -103,7 +103,7 @@ type ClientDoResponse struct {
 
 func (suite *ClientTestSuite) TestClient_do_Ok() {
 	var doResponse *ClientDoResponse
-	request, requestError := suite.client.newRequest(http.MethodGet, "/ok", nil)
+	request, requestError := suite.client.newRequest(http.MethodGet, "/ok", nil, nil)
 	suite.Nilf(requestError, "Error should be nil")
 	response, responseError := suite.client.do(context.Background(), request, &doResponse)
 	suite.Nilf(responseError, "Error should be nil")
