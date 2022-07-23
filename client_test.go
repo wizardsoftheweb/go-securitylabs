@@ -15,7 +15,10 @@
 package vsl
 
 import (
+	"net/http"
+	"net/url"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -24,4 +27,10 @@ func TestNewClient(t *testing.T) {
 	client := NewClient(nil, nil)
 	assert.NotNilf(t, client, "Client should not be nil")
 	assert.Equalf(t, productionUrl, client.Config.BaseUrl, "BaseUrl should be set to productionUrl")
+	clientWithConfig := NewClient(&ClientConfig{BaseUrl: &url.URL{}}, nil)
+	assert.NotNilf(t, clientWithConfig, "Client should not be nil")
+	assert.NotEqualf(t, productionUrl, clientWithConfig.Config.BaseUrl, "BaseUrl should not be set to productionUrl")
+	clientWithHttpClient := NewClient(nil, &http.Client{Timeout: time.Duration(1) * time.Second})
+	assert.NotNilf(t, clientWithHttpClient, "Client should not be nil")
+	assert.NotEqualf(t, clientWithHttpClient.httpClient, http.DefaultClient, "httpClient should not be set to http.DefaultClient")
 }
