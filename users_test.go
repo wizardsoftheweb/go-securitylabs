@@ -337,6 +337,27 @@ func handlerPutUser(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(responseBody)
 }
 
+// DELETE /api/users/:id
+// responses pulled from
+// https://apidocs.hunter2.com/#delete-user
+// I have no idea if these are actually what the API returns
+func handlerDeleteUser(w http.ResponseWriter, r *http.Request) {
+	userId := strings.Replace(r.URL.RequestURI(), "/api/user/", "", 1)
+	// TODO: How to test ID validity?
+	if 24 != len(userId) {
+		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write([]byte("{\"message\":\"User id is invalid\"}"))
+		return
+	}
+	if !listContains(testExistingUserIds, userId) {
+		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write([]byte("{\"message\":\"User not found\"}"))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte("{}"))
+}
+
 func TestClient_GetUsers(t *testing.T) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
