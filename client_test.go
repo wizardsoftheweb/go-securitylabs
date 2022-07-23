@@ -15,6 +15,7 @@
 package vsl
 
 import (
+	"context"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -89,26 +90,26 @@ func (suite *ClientNewRequestSuite) TestClient_newRequest_WithBodyBuildError() {
 	suite.NotNilf(err, "Error should not be nil")
 }
 
-//type ClientDoResponse struct {
-//	Message string `json:"message"`
-//}
-//
-//func TestClient_Do(t *testing.T) {
-//	mux := http.NewServeMux()
-//	mux.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) {
-//		w.WriteHeader(http.StatusOK)
-//		_, _ = w.Write([]byte("{\"message\":\"ok\"}"))
-//	})
-//	server := httptest.NewServer(mux)
-//	defer server.Close()
-//	client := NewClient(&ClientConfig{BaseUrl: &url.URL{Host: server.URL}}, nil)
-//	assert.NotNilf(t, client, "Client should not be nil")
-//	var doResponse *ClientDoResponse
-//	response, err := client.do(context.Background(), &http.Request{}, doResponse)
-//	fmt.Printf("%+v\n", err)
-//	fmt.Printf("%+v\n", response)
-//	assert.Nilf(t, err, "Error should be nil")
-//	assert.Equalf(t, http.StatusOK, response.StatusCode, "StatusCode should be 200")
-//	assert.NotNilf(t, doResponse, "doResponse should not be nil")
-//	assert.Equalf(t, "ok", doResponse.Message, "Message should be ok")
-//}
+type ClientDoResponse struct {
+	Message string `json:"message"`
+}
+
+func TestClient_Do(t *testing.T) {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("{\"message\":\"ok\"}"))
+	})
+	server := httptest.NewServer(mux)
+	defer server.Close()
+	testServerUrl, _ := url.Parse(server.URL)
+	client := NewClient(testServerUrl, nil)
+	assert.NotNilf(t, client, "Client should not be nil")
+	var doResponse *ClientDoResponse
+	request, _ := client.newRequest(http.MethodGet, "/ok", nil)
+	response, err := client.do(context.Background(), request, &doResponse)
+	assert.Nilf(t, err, "Error should be nil")
+	assert.Equalf(t, http.StatusOK, response.StatusCode, "StatusCode should be 200")
+	assert.NotNilf(t, doResponse, "doResponse should not be nil")
+	assert.Equalf(t, "ok", doResponse.Message, "Message should be ok")
+}
