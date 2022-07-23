@@ -111,8 +111,27 @@ func (suite *AuthenticationTestSuite) TearDownTest() {
 	}
 }
 
-//func (suite *AuthenticationTestSuite) TestClient_SetAuthFromEnvironment() {
-//	suite.client.AuthKey
-//	currentAuth := os.Getenv(EnvVslAuthKey)
-//
-//}
+func (suite *AuthenticationTestSuite) TestClient_SetAuthFromEnvironment() {
+	client := NewClient(suite.serverUrl, nil)
+	suite.NotEqualf(testKey, client.AuthKey, "AuthKey should be set from environment")
+	suite.NotEqualf(testSecret, client.AuthSecret, "AuthSecret should be set from environment")
+	noAuthKeyError := client.SetAuthFromEnvironment()
+	suite.NotNilf(noAuthKeyError, "Should return error if no AuthKey is set")
+	_ = os.Setenv(EnvVslAuthKey, testKey)
+	noAuthSecretError := client.SetAuthFromEnvironment()
+	suite.NotNilf(noAuthSecretError, "Should return error if no AuthSecret is set")
+	_ = os.Setenv(EnvVslAuthSecret, testSecret)
+	noError := client.SetAuthFromEnvironment()
+	suite.Nilf(noError, "SetAuthFromEnvironment should not return an error")
+	suite.Equalf(testKey, client.AuthKey, "AuthKey should be set from environment")
+	suite.Equalf(testSecret, client.AuthSecret, "AuthSecret should be set from environment")
+}
+
+func (suite *AuthenticationTestSuite) TestClient_SetAuth() {
+	client := NewClient(suite.serverUrl, nil)
+	suite.NotEqualf(testKey, client.AuthKey, "AuthKey should be set from fnc")
+	suite.NotEqualf(testSecret, client.AuthSecret, "AuthSecret should be set from fnc")
+	client.SetAuth(testKey, testSecret)
+	suite.Equalf(testKey, client.AuthKey, "AuthKey should be set from fnc")
+	suite.Equalf(testSecret, client.AuthSecret, "AuthSecret should be set from fnc")
+}
