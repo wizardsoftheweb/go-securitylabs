@@ -20,40 +20,40 @@ import (
 	"net/url"
 )
 
-// UsersUsersRoles
+// GetUsersUsersRoles
 // This is a list of roles attached to a user
 // https://apidocs.hunter2.com/#get-users
-type UsersUsersRoles []string
+type GetUsersUsersRoles []string
 
-// UsersUsers
+// GetUsersUsers
 // These are all the properties of a user from the /api/user endpoint
 // https://apidocs.hunter2.com/#get-users
-type UsersUsers struct {
-	Id         string          `json:"id"`
-	IsAdmin    bool            `json:"isAdmin"`
-	IsDisabled bool            `json:"isDisabled"`
-	Email      string          `json:"email"`
-	Joined     bool            `json:"joined"`
-	LastActive int64           `json:"lastActive"`
-	Roles      UsersUsersRoles `json:"roles"`
+type GetUsersUsers struct {
+	Id         string             `json:"id"`
+	IsAdmin    bool               `json:"isAdmin"`
+	IsDisabled bool               `json:"isDisabled"`
+	Email      string             `json:"email"`
+	Joined     bool               `json:"joined"`
+	LastActive int64              `json:"lastActive"`
+	Roles      GetUsersUsersRoles `json:"roles"`
 }
 
-// UsersResponse
+// GetUsersResponse
 // This is the full body of the /api/user endpoint
 // https://apidocs.hunter2.com/#get-users
-type UsersResponse struct {
-	NextPage *int         `json:"nextPage"`
-	Users    []UsersUsers `json:"users"`
+type GetUsersResponse struct {
+	NextPage *int            `json:"nextPage"`
+	Users    []GetUsersUsers `json:"users"`
 }
 
-// UsersOptions
+// GetUsersOptions
 // These are the query params for the /api/users endpoint
 // https://apidocs.hunter2.com/#get-users
-type UsersOptions struct {
+type GetUsersOptions struct {
 	Page *int `query:"page"`
 }
 
-func (c *Client) GetUsers() ([]UsersUsers, error) {
+func (c *Client) GetUsers() ([]GetUsersUsers, error) {
 	relativeUrl := &url.URL{Path: "/users"}
 	requestUrl := c.Config.BaseUrl.ResolveReference(relativeUrl)
 	request, requestGenerationErr := http.NewRequest("GET", requestUrl.String(), nil)
@@ -66,7 +66,7 @@ func (c *Client) GetUsers() ([]UsersUsers, error) {
 		return nil, responseErr
 	}
 	defer (func() { _ = response.Body.Close() })()
-	var responseBody UsersResponse
+	var responseBody GetUsersResponse
 	decodeErr := json.NewDecoder(response.Body).Decode(&responseBody)
 	if nil != decodeErr {
 		return nil, decodeErr
@@ -74,10 +74,10 @@ func (c *Client) GetUsers() ([]UsersUsers, error) {
 	return responseBody.Users, nil
 }
 
-// UsersDetailsPages
+// GetUsersDetailsPages
 // This is the format of the pages object on the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
-type UsersDetailsPages struct {
+type GetUsersDetailsPages struct {
 	Current     int     `json:"current"`
 	Previous    *int    `json:"previous"`
 	Next        *int    `json:"next"`
@@ -88,39 +88,39 @@ type UsersDetailsPages struct {
 	PreviousUrl *string `json:"previousUrl"`
 }
 
-// UsersDetailsUsersRoles
+// GetUsersDetailsUsersRoles
 // This is the format of the roles object on the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
-type UsersDetailsUsersRoles struct {
+type GetUsersDetailsUsersRoles struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
 
-// UsersDetailsUsers
+// GetUsersDetailsUsers
 // This is the format of the users object on the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
-type UsersDetailsUsers struct {
-	Id                       string                   `json:"id"`
-	LastActive               *int64                   `json:"lastActive"`
-	LabsCompleted            int                      `json:"labsCompleted"`
-	PercentRequiredCompleted float64                  `json:"percentRequiredCompleted"`
-	Points                   int                      `json:"points"`
-	Name                     string                   `json:"name"`
-	Roles                    []UsersDetailsUsersRoles `json:"roles"`
+type GetUsersDetailsUsers struct {
+	Id                       string                      `json:"id"`
+	LastActive               *int64                      `json:"lastActive"`
+	LabsCompleted            int                         `json:"labsCompleted"`
+	PercentRequiredCompleted float64                     `json:"percentRequiredCompleted"`
+	Points                   int                         `json:"points"`
+	Name                     string                      `json:"name"`
+	Roles                    []GetUsersDetailsUsersRoles `json:"roles"`
 }
 
-// UsersDetailsResponse
+// GetUsersDetailsResponse
 // This is the full body of the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
-type UsersDetailsResponse struct {
-	Pages UsersDetailsPages   `json:"pages"`
-	Users []UsersDetailsUsers `json:"users"`
+type GetUsersDetailsResponse struct {
+	Pages GetUsersDetailsPages   `json:"pages"`
+	Users []GetUsersDetailsUsers `json:"users"`
 }
 
-// UsersDetailsOptions
+// GetUsersDetailsOptions
 // These are the query params for the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
-type UsersDetailsOptions struct {
+type GetUsersDetailsOptions struct {
 	CampaignIds []string `query:"campaignIds"`
 	EndTime     *int64   `query:"endTime"`
 	Limit       *int     `query:"limit"`

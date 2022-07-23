@@ -74,7 +74,7 @@ func listContains(list []string, item string) bool {
 // https://apidocs.hunter2.com/#get-users
 // I have no idea if these are actually what the API returns
 func handlerUsers(w http.ResponseWriter, r *http.Request) {
-	var params UsersOptions
+	var params GetUsersOptions
 	_ = urlquery.Unmarshal([]byte(r.URL.RawQuery), &params)
 	var page string
 	if nil == params.Page || *params.Page > testMaxPage {
@@ -104,7 +104,7 @@ func handlerUsers(w http.ResponseWriter, r *http.Request) {
 // https://apidocs.hunter2.com/#get-users-details
 // I have no idea if these are actually what the API returns
 func usersDetailsTestHandler(w http.ResponseWriter, r *http.Request) {
-	var params UsersDetailsOptions
+	var params GetUsersDetailsOptions
 	_ = urlquery.Unmarshal([]byte(r.URL.RawQuery), &params)
 	for _, campaignId := range params.CampaignIds {
 		if !listContains(testCampaignIds, campaignId) {
@@ -191,7 +191,7 @@ func usersDetailsTestHandler(w http.ResponseWriter, r *http.Request) {
 		*previousPage = *params.Page - 1
 	}
 	w.WriteHeader(http.StatusOK)
-	pages := UsersDetailsPages{
+	pages := GetUsersDetailsPages{
 		Current:  *params.Page,
 		Previous: previousPage,
 		Next:     nextPage,
