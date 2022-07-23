@@ -34,3 +34,27 @@ func TestNewClient(t *testing.T) {
 	assert.NotNilf(t, clientWithHttpClient, "Client should not be nil")
 	assert.NotEqualf(t, clientWithHttpClient.httpClient, http.DefaultClient, "httpClient should not be set to http.DefaultClient")
 }
+
+//type ClientDoResponse struct {
+//	Message string `json:"message"`
+//}
+//
+//func TestClient_Do(t *testing.T) {
+//	mux := http.NewServeMux()
+//	mux.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) {
+//		w.WriteHeader(http.StatusOK)
+//		_, _ = w.Write([]byte("{\"message\":\"ok\"}"))
+//	})
+//	server := httptest.NewServer(mux)
+//	defer server.Close()
+//	client := NewClient(&ClientConfig{BaseUrl: &url.URL{Host: server.URL}}, nil)
+//	assert.NotNilf(t, client, "Client should not be nil")
+//	var doResponse *ClientDoResponse
+//	response, err := client.do(context.Background(), &http.Request{}, doResponse)
+//	fmt.Printf("%+v\n", err)
+//	fmt.Printf("%+v\n", response)
+//	assert.Nilf(t, err, "Error should be nil")
+//	assert.Equalf(t, http.StatusOK, response.StatusCode, "StatusCode should be 200")
+//	assert.NotNilf(t, doResponse, "doResponse should not be nil")
+//	assert.Equalf(t, "ok", doResponse.Message, "Message should be ok")
+//}

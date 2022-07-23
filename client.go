@@ -15,8 +15,10 @@
 package vsl
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/url"
 )
@@ -52,6 +54,30 @@ func NewClient(config *ClientConfig, httpClient *http.Client) *Client {
 		Config:     newConfig,
 		httpClient: newHttpClient,
 	}
+}
+
+// Create a request to the API with the given method, path, and body
+// https://medium.com/@marcus.olsson/writing-a-go-client-for-your-restful-api-c193a2f4998c
+func (c *Client) newRequest(method, path string, body interface{}) (*http.Request, error) {
+	relativeUrl := &url.URL{Path: path}
+	fullUrl := c.Config.BaseUrl.ResolveReference(relativeUrl)
+	var buffer io.ReadWriter
+	if nil != body {
+		buffer = new(bytes.Buffer)
+		jsonEncoderError := json.NewEncoder(buffer).Encode(body)
+		if nil != jsonEncoderError {
+			return nil, jsonEncoderError
+		}
+	}
+	request, requestGenerationErr := http.NewRequest(method, fullUrl.String(), buffer)
+	if nil != requestGenerationErr {
+		return nil, requestGenerationErr
+	}
+	if nil != body {
+		request.Header.Set("Content-Type", "application/json")
+	}
+	request.Header.Set("Accept", "application/json")
+	return request, nil
 }
 
 // Primmary method to make a request to the API.
