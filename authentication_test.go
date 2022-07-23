@@ -28,7 +28,7 @@ const (
 // Authorization responses pulled from
 // https://apidocs.hunter2.com/#authentication
 // I have no idea if these are actually what the API returns
-func authenticationHandlerForTests(next http.Handler) http.Handler {
+func authenticationTestMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var authKey, secret string
 		for key, value := range r.Header {
