@@ -73,3 +73,17 @@ func (c *Client) GetUsers() ([]Users, error) {
 	}
 	return responseBody.Users, nil
 }
+
+// UsersDetailsPages
+// This is the format of the pages object on the /api/users/details endpoint
+// https://apidocs.hunter2.com/#get-users-details
+type UsersDetailsPages struct {
+	Current     int    `json:"current"`
+	Previous    int    `json:"previous"`
+	Next        int    `json:"next"`
+	Limit       int    `json:"limit"`
+	Total       int    `json:"total"`
+	CurrentUrl  string `json:"currentUrl"`
+	NextUrl     string `json:"nextUrl"`
+	PreviousUrl string `json:"previousUrl"`
+}
