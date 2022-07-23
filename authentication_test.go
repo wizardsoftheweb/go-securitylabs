@@ -15,6 +15,7 @@
 package vsl
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -45,12 +46,13 @@ func authenticationTestMiddleware(next http.Handler) http.Handler {
 			}
 		}
 		if "" == authKey || "" == secret {
-			w.WriteHeader(http.StatusUnauthorized)
+			w.WriteHeader(http.StatusForbidden)
+			_, _ = w.Write([]byte("{\"message\":\"ApiCredential invalid\"}"))
 			return
 		}
 		if testKey != authKey {
 			w.WriteHeader(http.StatusNotFound)
-			_, _ = w.Write([]byte("{\"message\":\"missing\"}"))
+			_, _ = w.Write([]byte("{\"message\":\"ApiCredential missing\"}"))
 			return
 		}
 		if testSecret != secret && testRotatedSecret != secret {
@@ -134,4 +136,18 @@ func (suite *AuthenticationTestSuite) TestClient_SetAuth() {
 	client.SetAuth(testKey, testSecret)
 	suite.Equalf(testKey, client.AuthKey, "AuthKey should be set from fnc")
 	suite.Equalf(testSecret, client.AuthSecret, "AuthSecret should be set from fnc")
+}
+
+type ClientAuthResponse struct {
+	Message string `json:"message"`
+}
+
+func (suite *AuthenticationTestSuite) TestClient_Req_NoAuth() {
+	client := NewClient(suite.serverUrl, nil)
+	request, requestGenerationErr := client.newRequest("GET", "/ok", nil)
+	suite.Nilf(requestGenerationErr, "Should not return error when creating request")
+	var authResponse *ClientAuthResponse
+	response, responseError := client.do(context.Background(), request, &authResponse)
+	suite.Nilf(responseError, "Should not return error when making request")
+	suite.Equalf(http.StatusUnauthorized, response.StatusCode, "Should return 401 status code")
 }
