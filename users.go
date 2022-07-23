@@ -116,3 +116,17 @@ type UsersDetailsResponse struct {
 	Pages UsersDetailsPages   `json:"pages"`
 	Users []UsersDetailsUsers `json:"users"`
 }
+
+// UsersDetailsOptions
+// These are the query params for the /api/users/details endpoint
+// https://apidocs.hunter2.com/#get-users-details
+type UsersDetailsOptions struct {
+	CampaignIds []string `url:"campaignIds"`
+	EndTime     int64    `url:"endTime"`
+	Limit       int      `url:"limit"`
+	Page        int      `url:"page"`
+	StartTime   int64    `url:"startTime"`
+	RoleIds     []string `url:"roleIds"`
+	Sort        string   `url:"sort"`
+	SortType    string   `url:"sortType"`
+}
