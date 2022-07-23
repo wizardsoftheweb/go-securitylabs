@@ -15,6 +15,7 @@
 package vsl
 
 import (
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -63,6 +64,29 @@ func (suite *ClientNewRequestSuite) TestClient_newRequest_Empty() {
 	suite.Equalf(http.MethodGet, request.Method, "Method should be set to http.MethodGet")
 	suite.Equalf(suite.server.URL+"/", request.URL.String(), "URL should be set to testServer.URL")
 	suite.Nilf(request.Body, "Body should be nil")
+}
+
+func (suite *ClientNewRequestSuite) TestClient_newRequest_WithBody() {
+	body := struct {
+		Name string `json:"name"`
+	}{Name: "test"}
+	request, err := suite.client.newRequest(http.MethodPost, "/", body)
+	suite.Nilf(err, "Error should be nil")
+	suite.NotNilf(request, "Request should not be nil")
+	suite.Equalf(http.MethodPost, request.Method, "Method should be set to http.MethodPost")
+	suite.Equalf(suite.server.URL+"/", request.URL.String(), "URL should be set to testServer.URL")
+	suite.NotNilf(request.Body, "Body should not be nil")
+	suite.Equalf("application/json", request.Header.Get("Content-Type"), "Content-Type should be set to application/json")
+	suite.Equalf("application/json", request.Header.Get("Accept"), "Accept should be set to application/json")
+	parsedBody, _ := ioutil.ReadAll(request.Body)
+	suite.Equalf("{\"name\":\"test\"}\n", string(parsedBody), "Body should be set to `{\"name\":\"test\"}\n`")
+}
+
+func (suite *ClientNewRequestSuite) TestClient_newRequest_WithBodyBuildError() {
+	body := make(chan int)
+	request, err := suite.client.newRequest(http.MethodPost, "/", body)
+	suite.Nilf(request, "Request should be nil")
+	suite.NotNilf(err, "Error should not be nil")
 }
 
 //type ClientDoResponse struct {

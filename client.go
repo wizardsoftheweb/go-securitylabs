@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -55,6 +56,7 @@ func NewClient(baseUrl *url.URL, httpClient *http.Client) *Client {
 func (c *Client) newRequest(method, path string, body interface{}) (*http.Request, error) {
 	relativeUrl := &url.URL{Path: path}
 	fullUrl := c.BaseUrl.ResolveReference(relativeUrl)
+	fmt.Printf("'%s'\n", fullUrl)
 	var buffer io.ReadWriter
 	if nil != body {
 		buffer = new(bytes.Buffer)
@@ -63,10 +65,7 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 			return nil, jsonEncoderError
 		}
 	}
-	request, requestGenerationErr := http.NewRequest(method, fullUrl.String(), buffer)
-	if nil != requestGenerationErr {
-		return nil, requestGenerationErr
-	}
+	request, _ := http.NewRequest(method, fullUrl.String(), buffer)
 	if nil != body {
 		request.Header.Set("Content-Type", "application/json")
 	}
