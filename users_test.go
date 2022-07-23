@@ -33,7 +33,7 @@ const (
 // responses pulled from
 // https://apidocs.hunter2.com/#get-users
 // I have no idea if these are actually what the API returns
-func usersTestHandler(w http.ResponseWriter, r *http.Request) {
+func handlerUsers(w http.ResponseWriter, r *http.Request) {
 	var params UsersOptions
 	_ = urlquery.Unmarshal([]byte(r.URL.RawQuery), &params)
 	var page string
