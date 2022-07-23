@@ -111,3 +111,12 @@ func (suite *ClientTestSuite) TestClient_do_Ok() {
 	suite.NotNilf(doResponse, "doResponse should not be nil")
 	suite.Equalf("ok", doResponse.Message, "Message should be ok")
 }
+
+func TestClient_attachQueryParams(t *testing.T) {
+	client := NewClient(nil, nil)
+	assert.Equalf(t, productionUrl.String(), client.attachQueryParams(client.BaseUrl.String(), nil), "Url should be set to productionUrl without params")
+	page := new(int)
+	assert.Equalf(t, productionUrl.String(), client.attachQueryParams(client.BaseUrl.String(), &GetUsersOptions{Page: page}), "Url should be set to productionUrl when params evaluate to empty")
+	*page = 1
+	assert.Equalf(t, productionUrl.String()+"?page=1", client.attachQueryParams(client.BaseUrl.String(), &GetUsersOptions{Page: page}), "Url should be set to productionUrl with params")
+}

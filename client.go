@@ -87,7 +87,7 @@ func (c *Client) SetAuth(key, secret string) {
 func (c *Client) newRequest(method, path string, options, body interface{}) (*http.Request, error) {
 	relativeUrl := &url.URL{Path: path}
 	fullUrl := c.BaseUrl.ResolveReference(relativeUrl)
-	compiledUrl := c.buildRelativePath(fullUrl.String(), options)
+	compiledUrl := c.attachQueryParams(fullUrl.String(), options)
 	var buffer io.ReadWriter
 	if nil != body {
 		buffer = new(bytes.Buffer)
@@ -124,7 +124,7 @@ func (c *Client) do(ctx context.Context, request *http.Request, v interface{}) (
 	return response, parseError
 }
 
-func (c *Client) buildRelativePath(path string, options interface{}) string {
+func (c *Client) attachQueryParams(path string, options interface{}) string {
 	if nil == options {
 		return path
 	}
