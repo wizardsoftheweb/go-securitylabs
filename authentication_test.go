@@ -16,7 +16,12 @@ package vsl
 
 import (
 	"net/http"
+	"net/http/httptest"
+	"net/url"
 	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 const (
@@ -59,4 +64,30 @@ func authenticationTestMiddleware(next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(w, r)
 	})
+}
+
+type AuthenticationTestSuite struct {
+	suite.Suite
+	server    *httptest.Server
+	serverUrl *url.URL
+	client    *Client
+}
+
+func TestAuthenticationTestSuite(t *testing.T) {
+	suite.Run(t, new(AuthenticationTestSuite))
+}
+
+func (suite *AuthenticationTestSuite) SetupTest() {
+	mux := http.NewServeMux()
+	mux.Handle("/ok", authenticationTestMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("{\"message\":\"ok\"}"))
+	})))
+	suite.server = httptest.NewServer(mux)
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+}
+
+func (suite *AuthenticationTestSuite) TearDownTest() {
+	suite.server.Close()
 }
