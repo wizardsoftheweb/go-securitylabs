@@ -151,3 +151,13 @@ func (suite *AuthenticationTestSuite) TestClient_Req_NoAuth() {
 	suite.Nilf(responseError, "Should not return error when making request")
 	suite.Equalf(http.StatusUnauthorized, response.StatusCode, "Should return 401 status code")
 }
+
+func (suite *AuthenticationTestSuite) TestClient_Req_AuthMissing() {
+	suite.client.AuthKey = "qqq"
+	request, requestGenerationErr := suite.client.newRequest("GET", "/ok", nil)
+	suite.Nilf(requestGenerationErr, "Should not return error when creating request")
+	var authResponse *ClientAuthResponse
+	response, responseError := suite.client.do(context.Background(), request, &authResponse)
+	suite.Nilf(responseError, "Should not return error when making request")
+	suite.Equalf(http.StatusNotFound, response.StatusCode, "Should return 404 status code")
+}
