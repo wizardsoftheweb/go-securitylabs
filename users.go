@@ -50,7 +50,7 @@ type UsersResponse struct {
 // These are the query params for the /api/users endpoint
 // https://apidocs.hunter2.com/#get-users
 type UsersOptions struct {
-	Page string `url:"page"`
+	Page string `query:"page"`
 }
 
 func (c *Client) GetUsers() ([]UsersUsers, error) {
@@ -121,12 +121,12 @@ type UsersDetailsResponse struct {
 // These are the query params for the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
 type UsersDetailsOptions struct {
-	CampaignIds []string `url:"campaignIds"`
-	EndTime     int64    `url:"endTime"`
-	Limit       int      `url:"limit"`
-	Page        int      `url:"page"`
-	StartTime   int64    `url:"startTime"`
-	RoleIds     []string `url:"roleIds"`
-	Sort        string   `url:"sort"`
-	SortType    string   `url:"sortType"`
+	CampaignIds []string `query:"campaignIds"`
+	EndTime     int64    `query:"endTime"`
+	Limit       int      `query:"limit"`
+	Page        int      `query:"page"`
+	StartTime   int64    `query:"startTime"`
+	RoleIds     []string `query:"roleIds"`
+	Sort        string   `query:"sort"`
+	SortType    string   `query:"sortType"`
 }
