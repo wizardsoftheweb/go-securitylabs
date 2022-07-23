@@ -16,6 +16,7 @@ package vsl
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -27,9 +28,10 @@ import (
 )
 
 const (
-	testKey           = "proper"
-	testSecret        = "secret"
-	testRotatedSecret = "rotated"
+	testKey            = "proper"
+	testSecret         = "secret"
+	testRotatedSecret  = "rotated"
+	testDisabledSecret = "disabled"
 )
 
 // Authorization responses pulled from
@@ -45,6 +47,7 @@ func authenticationTestMiddleware(next http.Handler) http.Handler {
 				break
 			}
 		}
+		fmt.Println("authKey:", authKey, "secret:", secret)
 		if "" == authKey || "" == secret {
 			w.WriteHeader(http.StatusForbidden)
 			_, _ = w.Write([]byte("{\"message\":\"ApiCredential invalid\"}"))
@@ -54,18 +57,23 @@ func authenticationTestMiddleware(next http.Handler) http.Handler {
 			w.WriteHeader(http.StatusNotFound)
 			_, _ = w.Write([]byte("{\"message\":\"ApiCredential missing\"}"))
 			return
+		} else {
+			if testSecret == secret {
+				next.ServeHTTP(w, r)
+			}
+			if testDisabledSecret == secret {
+				w.WriteHeader(http.StatusUnauthorized)
+				_, _ = w.Write([]byte("{\"message\":\"disabled\"}"))
+				return
+			}
+			if testRotatedSecret == secret {
+				w.WriteHeader(http.StatusUnauthorized)
+				_, _ = w.Write([]byte("{\"message\":\"rotated\"}"))
+				return
+			}
 		}
-		if testSecret != secret && testRotatedSecret != secret {
-			w.WriteHeader(http.StatusUnauthorized)
-			_, _ = w.Write([]byte("{\"message\":\"disabled\"}"))
-			return
-		}
-		if testRotatedSecret == secret {
-			w.WriteHeader(http.StatusUnauthorized)
-			_, _ = w.Write([]byte("{\"message\":\"rotated\"}"))
-			return
-		}
-		next.ServeHTTP(w, r)
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = w.Write([]byte("{\"message\":\"ApiCredential missing\"}"))
 	})
 }
 
