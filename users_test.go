@@ -23,6 +23,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/suite"
+
 	"github.com/hetiansu5/urlquery"
 	"github.com/stretchr/testify/assert"
 )
@@ -356,6 +358,29 @@ func handlerDeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte("{}"))
+}
+
+type UsersTestSuite struct {
+	suite.Suite
+	server    *httptest.Server
+	serverUrl *url.URL
+	client    *Client
+}
+
+func TestUsersTestSuite(t *testing.T) {
+	suite.Run(t, new(UsersTestSuite))
+}
+
+func (suite *UsersTestSuite) SetupTest() {
+	mux := http.NewServeMux()
+	mux.Handle("/users", http.HandlerFunc(handlerGetUsers))
+	suite.server = httptest.NewServer(mux)
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+}
+
+func (suite *UsersTestSuite) TearDownTest() {
+	suite.server.Close()
 }
 
 func TestClient_GetUsers(t *testing.T) {
