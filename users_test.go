@@ -37,10 +37,10 @@ func handlerUsers(w http.ResponseWriter, r *http.Request) {
 	var params UsersOptions
 	_ = urlquery.Unmarshal([]byte(r.URL.RawQuery), &params)
 	var page string
-	if params.Page > testMaxPage {
+	if nil == params.Page || *params.Page > testMaxPage {
 		page = "null"
 	} else {
-		page = fmt.Sprintf("\"/api/users?page=%d\"", params.Page+1)
+		page = fmt.Sprintf("\"/api/users?page=%d\"", *params.Page+1)
 	}
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(fmt.Sprintf(`{
