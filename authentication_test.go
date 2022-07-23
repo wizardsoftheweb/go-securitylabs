@@ -16,7 +16,6 @@ package vsl
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -47,7 +46,6 @@ func authenticationTestMiddleware(next http.Handler) http.Handler {
 				break
 			}
 		}
-		fmt.Println("authKey:", authKey, "secret:", secret)
 		if "" == authKey || "" == secret {
 			w.WriteHeader(http.StatusForbidden)
 			_, _ = w.Write([]byte("{\"message\":\"ApiCredential invalid\"}"))
@@ -72,8 +70,6 @@ func authenticationTestMiddleware(next http.Handler) http.Handler {
 				return
 			}
 		}
-		w.WriteHeader(http.StatusNotFound)
-		_, _ = w.Write([]byte("{\"message\":\"ApiCredential missing\"}"))
 	})
 }
 
