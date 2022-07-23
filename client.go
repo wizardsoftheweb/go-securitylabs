@@ -26,24 +26,18 @@ import (
 // Get the latest prod URL: https://apidocs.hunter2.com/#production
 var productionUrl, _ = url.Parse("https://securitylabs.veracode.com/api/")
 
-type ClientConfig struct {
-	BaseUrl *url.URL
-}
-
 type Client struct {
-	Config     *ClientConfig
+	BaseUrl    *url.URL
 	httpClient *http.Client
 }
 
-func NewClient(config *ClientConfig, httpClient *http.Client) *Client {
-	var newConfig *ClientConfig
+func NewClient(baseUrl *url.URL, httpClient *http.Client) *Client {
 	var newHttpClient *http.Client
-	if nil == config {
-		newConfig = &ClientConfig{
-			BaseUrl: productionUrl,
-		}
+	var newBaseUrl *url.URL
+	if nil == baseUrl {
+		newBaseUrl = productionUrl
 	} else {
-		newConfig = config
+		newBaseUrl = baseUrl
 	}
 	if nil == httpClient {
 		newHttpClient = http.DefaultClient
@@ -51,7 +45,7 @@ func NewClient(config *ClientConfig, httpClient *http.Client) *Client {
 		newHttpClient = httpClient
 	}
 	return &Client{
-		Config:     newConfig,
+		BaseUrl:    newBaseUrl,
 		httpClient: newHttpClient,
 	}
 }
@@ -60,7 +54,7 @@ func NewClient(config *ClientConfig, httpClient *http.Client) *Client {
 // https://medium.com/@marcus.olsson/writing-a-go-client-for-your-restful-api-c193a2f4998c
 func (c *Client) newRequest(method, path string, body interface{}) (*http.Request, error) {
 	relativeUrl := &url.URL{Path: path}
-	fullUrl := c.Config.BaseUrl.ResolveReference(relativeUrl)
+	fullUrl := c.BaseUrl.ResolveReference(relativeUrl)
 	var buffer io.ReadWriter
 	if nil != body {
 		buffer = new(bytes.Buffer)

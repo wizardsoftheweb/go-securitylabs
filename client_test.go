@@ -16,6 +16,7 @@ package vsl
 
 import (
 	"net/http"
+	"net/http/httptest"
 	"net/url"
 	"testing"
 	"time"
@@ -26,13 +27,27 @@ import (
 func TestNewClient(t *testing.T) {
 	client := NewClient(nil, nil)
 	assert.NotNilf(t, client, "Client should not be nil")
-	assert.Equalf(t, productionUrl, client.Config.BaseUrl, "BaseUrl should be set to productionUrl")
-	clientWithConfig := NewClient(&ClientConfig{BaseUrl: &url.URL{}}, nil)
-	assert.NotNilf(t, clientWithConfig, "Client should not be nil")
-	assert.NotEqualf(t, productionUrl, clientWithConfig.Config.BaseUrl, "BaseUrl should not be set to productionUrl")
+	assert.Equalf(t, productionUrl, client.BaseUrl, "BaseUrl should be set to productionUrl")
+	clientWithUrl := NewClient(&url.URL{}, nil)
+	assert.NotNilf(t, clientWithUrl, "Client should not be nil")
+	assert.NotEqualf(t, productionUrl, clientWithUrl.BaseUrl, "BaseUrl should not be set to productionUrl")
 	clientWithHttpClient := NewClient(nil, &http.Client{Timeout: time.Duration(1) * time.Second})
 	assert.NotNilf(t, clientWithHttpClient, "Client should not be nil")
 	assert.NotEqualf(t, clientWithHttpClient.httpClient, http.DefaultClient, "httpClient should not be set to http.DefaultClient")
+}
+
+func TestClient_newRequest(t *testing.T) {
+	mux := http.NewServeMux()
+	testServer := httptest.NewServer(mux)
+	defer testServer.Close()
+	testServerUrl, _ := url.Parse(testServer.URL)
+	client := NewClient(testServerUrl, nil)
+	assert.NotNilf(t, client, "Client should not be nil")
+	request, err := client.newRequest(http.MethodGet, "/", nil)
+	assert.Nilf(t, err, "Error should be nil")
+	assert.NotNilf(t, request, "Request should not be nil")
+	assert.Equalf(t, http.MethodGet, request.Method, "Method should be set to http.MethodGet")
+	assert.Equalf(t, testServer.URL+"/", request.URL.String(), "URL should be set to testServer.URL")
 }
 
 //type ClientDoResponse struct {
