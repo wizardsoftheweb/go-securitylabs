@@ -131,3 +131,15 @@ type GetUsersDetailsOptions struct {
 	Sort        *string  `query:"sort"`
 	SortType    *string  `query:"sortType"`
 }
+
+// PutUser
+// This is the format of both the request and repsonse body of the
+// /api/user/:id endpoint
+// https://apidocs.hunter2.com/#put-user
+type PutUser struct {
+	Email    string   `json:"email"`
+	Name     string   `json:"name"`
+	Admin    bool     `json:"admin"`
+	Disabled bool     `json:"disabled"`
+	RoleIds  []string `json:"roleIds"`
+}
