@@ -98,6 +98,7 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 		request.Header.Set("Content-Type", "application/json")
 	}
 	request.Header.Set("Accept", "application/json")
+	request.Header.Set("Auth", fmt.Sprintf("%s:%s", c.AuthKey, c.AuthSecret))
 	return request, nil
 }
 
