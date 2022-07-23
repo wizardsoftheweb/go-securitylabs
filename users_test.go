@@ -77,7 +77,7 @@ func listContains(list []string, item string) bool {
 	return false
 }
 
-// /api/users?page=1
+// GET /api/users?page=1
 // responses pulled from
 // https://apidocs.hunter2.com/#get-users
 // I have no idea if these are actually what the API returns
@@ -107,7 +107,7 @@ func handlerGetUsers(w http.ResponseWriter, r *http.Request) {
 }`, page)))
 }
 
-// /api/users/details?campaignIds=5f5f18ff9dad493352660d2a,5f5f19099dad493352660d2b&roleIds=5f5f190f9dad493352660d2c,5f5f19159dad493352660d2d&startTime=1600067874107&endTime=1600067881636&sort=name&sortType=ASC&phrase=Chris&limit=10&page=0
+// GET /api/users/details?campaignIds=5f5f18ff9dad493352660d2a,5f5f19099dad493352660d2b&roleIds=5f5f190f9dad493352660d2c,5f5f19159dad493352660d2d&startTime=1600067874107&endTime=1600067881636&sort=name&sortType=ASC&phrase=Chris&limit=10&page=0
 // responses pulled from
 // https://apidocs.hunter2.com/#get-users-details
 // I have no idea if these are actually what the API returns
@@ -252,7 +252,7 @@ func usersGetUsersDetailsTestHandler(w http.ResponseWriter, r *http.Request) {
 }`, string(pagesBytes))))
 }
 
-// /api/users/:id/progress
+// GET /api/users/:id/progress
 // responses pulled from
 // https://apidocs.hunter2.com/#get-user-progress
 // I have no idea if these are actually what the API returns
@@ -287,7 +287,7 @@ func handlerGetUserProgress(w http.ResponseWriter, r *http.Request) {
 }`))
 }
 
-// /api/users/:id
+// PUT /api/users/:id
 // responses pulled from
 // https://apidocs.hunter2.com/#put-user
 // I have no idea if these are actually what the API returns
