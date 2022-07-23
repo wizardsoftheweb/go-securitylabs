@@ -18,9 +18,16 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
+	"os"
+)
+
+const (
+	EnvVslAuthKey    = "VSL_AUTH_KEY"
+	EnvVslAuthSecret = "VSL_AUTH_SECRET"
 )
 
 // Get the latest prod URL: https://apidocs.hunter2.com/#production
@@ -28,6 +35,8 @@ var productionUrl, _ = url.Parse("https://securitylabs.veracode.com/api/")
 
 type Client struct {
 	BaseUrl    *url.URL
+	AuthKey    string
+	AuthSecret string
 	httpClient *http.Client
 }
 
@@ -48,6 +57,27 @@ func NewClient(baseUrl *url.URL, httpClient *http.Client) *Client {
 		BaseUrl:    newBaseUrl,
 		httpClient: newHttpClient,
 	}
+}
+
+// AuthFromEnvironment
+// Pull authentication key and secret from environment variables; convenience method
+func (c *Client) AuthFromEnvironment() error {
+	c.AuthKey = os.Getenv(EnvVslAuthKey)
+	if "" == c.AuthKey {
+		return fmt.Errorf("VSL_AUTH_KEY is not set")
+	}
+	c.AuthSecret = os.Getenv(EnvVslAuthSecret)
+	if "" == c.AuthSecret {
+		return fmt.Errorf("VSL_AUTH_SECRET is not set")
+	}
+	return nil
+}
+
+// SetAuth
+// Set the authentication key and secret
+func (c *Client) SetAuth(key, secret string) {
+	c.AuthKey = key
+	c.AuthSecret = secret
 }
 
 // Create a request to the API with the given method, path, and body
