@@ -72,9 +72,11 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 }
 
 // Primmary method to make a request to the API.
+// https://medium.com/@marcus.olsson/adding-context-and-options-to-your-go-client-package-244c4ad1231b
 func (c *Client) do(ctx context.Context, request *http.Request, v interface{}) (*http.Response, error) {
 	request = request.WithContext(ctx)
 	response, requestError := c.httpClient.Do(request)
+	// TODO: Figure out how to mock this error
 	if nil != requestError {
 		select {
 		case <-ctx.Done():
@@ -86,5 +88,4 @@ func (c *Client) do(ctx context.Context, request *http.Request, v interface{}) (
 	defer (func() { _ = response.Body.Close() })()
 	parseError := json.NewDecoder(response.Body).Decode(v)
 	return response, parseError
-
 }
