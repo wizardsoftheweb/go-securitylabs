@@ -29,7 +29,8 @@ const (
 	testMaxPage = 10
 )
 
-// /api/users?page=1 responses pulled from
+// /api/users?page=1
+// responses pulled from
 // https://apidocs.hunter2.com/#get-users
 // I have no idea if these are actually what the API returns
 func usersTestHandler(w http.ResponseWriter, r *http.Request) {
@@ -42,11 +43,11 @@ func usersTestHandler(w http.ResponseWriter, r *http.Request) {
 	if convertedPage > testMaxPage {
 		page = "null"
 	} else {
-		page = fmt.Sprintf("/api/users?page=%d", convertedPage+1)
+		page = fmt.Sprintf("\"/api/users?page=%d\"", convertedPage+1)
 	}
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(fmt.Sprintf(`{
-  "nextPage" : "%s",
+  "nextPage" : %s,
   "users": [{
     "id": "3bd68695e165af6ced227afc",
     "isAdmin": true,
