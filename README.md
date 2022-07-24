@@ -32,6 +32,7 @@ Check out [the examples](./example) for usage.
 
 - [Veracode Security Labs API Docs](https://apidocs.hunter2.com/)
 - [Writing a Go client for your RESTful API](https://medium.com/@marcus.olsson/writing-a-go-client-for-your-restful-api-c193a2f4998c)
+- [Adding context and options to your Go client package](https://medium.com/@marcus.olsson/adding-context-and-options-to-your-go-client-package-244c4ad1231b)
 
 ## Notes
 
