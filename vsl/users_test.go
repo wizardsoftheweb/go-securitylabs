@@ -450,3 +450,5 @@ func (suite *UsersTestSuite) TestClient_GetUsersDetails_WithPage() {
 	//	Page: page,
 	//})
 }
+
+// TODO: GetUsersDetails: all the other options and conditions
