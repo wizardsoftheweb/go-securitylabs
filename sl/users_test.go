@@ -116,7 +116,7 @@ func handlerGetUsers(w http.ResponseWriter, r *http.Request) {
 // https://apidocs.hunter2.com/#get-users-details
 // I have no idea if these are actually what the API returns
 func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
-	var params GetUsersDetailsOptions
+	var params UsersDetailsOptions
 	_ = urlquery.Unmarshal([]byte(r.URL.RawQuery), &params)
 	for _, campaignId := range params.CampaignIds {
 		if !listContains(testCampaignIds, campaignId) {
@@ -457,20 +457,20 @@ func (suite *UsersDetailsTestSuite) TestClient_GetUsersDetails_NoOptions() {
 func (suite *UsersDetailsTestSuite) TestClient_GetUsersDetails_WithPage() {
 	page := new(int)
 	*page = 0
-	detailsPage0, detailsPage0Err := suite.client.GetUsersDetails(context.Background(), &GetUsersDetailsOptions{
+	detailsPage0, detailsPage0Err := suite.client.GetUsersDetails(context.Background(), &UsersDetailsOptions{
 		Page: page,
 	})
 	suite.Nilf(detailsPage0Err, "GetUsersDetails() should not return an error")
 	suite.Truef(len(detailsPage0.Users) > 0, "GetUsersDetails() should return at least one user")
 	*page = 1
-	detailsPage1, detailsPage1Err := suite.client.GetUsersDetails(context.Background(), &GetUsersDetailsOptions{
+	detailsPage1, detailsPage1Err := suite.client.GetUsersDetails(context.Background(), &UsersDetailsOptions{
 		Page: page,
 	})
 	suite.Nilf(detailsPage1Err, "GetUsersDetails() should not return an error")
 	suite.Truef(len(detailsPage1.Users) > 0, "GetUsersDetails() should return at least one user")
 	// TODO: How does the API handle pages that are out of range?
 	//*page = testMaxPage + 1
-	//details, detailsErr = suite.client.GetUsersDetails(context.Background(), &GetUsersDetailsOptions{
+	//details, detailsErr = suite.client.GetUsersDetails(context.Background(), &UsersDetailsOptions{
 	//	Page: page,
 	//})
 }

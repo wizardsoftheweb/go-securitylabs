@@ -102,22 +102,7 @@ type GetUsersDetailsResponse struct {
 	Users []GetUsersDetailsUsers `json:"users"`
 }
 
-// GetUsersDetailsOptions
-// These are the query params for the /api/users/details endpoint
-// https://apidocs.hunter2.com/#get-users-details
-type GetUsersDetailsOptions struct {
-	CampaignIds []string `query:"campaignIds"`
-	EndTime     *int64   `query:"endTime"`
-	Limit       *int     `query:"limit"`
-	Page        *int     `query:"page"`
-	Phrase      *string  `query:"phrase"`
-	StartTime   *int64   `query:"startTime"`
-	RoleIds     []string `query:"roleIds"`
-	Sort        *string  `query:"sort"`
-	SortType    *string  `query:"sortType"`
-}
-
-func (c *Client) GetUsersDetails(ctx context.Context, options *GetUsersDetailsOptions) (GetUsersDetailsResponse, error) {
+func (c *Client) GetUsersDetails(ctx context.Context, options *UsersDetailsOptions) (GetUsersDetailsResponse, error) {
 	// The only way to generate an error from Client.newRequest is if the body can't build
 	// Since we have no body, we can safely ignore the error
 	request, _ := c.newRequest(http.MethodGet, GetUsersDetailsPath, options, nil)

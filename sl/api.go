@@ -15,8 +15,7 @@
 package sl
 
 // Pages
-// This is the format of the pages object on the /api/users/details endpoint
-// https://apidocs.hunter2.com/#get-users-details
+// This is the format of the pages object several endpoints
 type Pages struct {
 	Current     int     `json:"current"`
 	Previous    *int    `json:"previous"`
@@ -26,4 +25,18 @@ type Pages struct {
 	CurrentUrl  string  `json:"currentUrl"`
 	NextUrl     *string `json:"nextUrl"`
 	PreviousUrl *string `json:"previousUrl"`
+}
+
+// UsersDetailsOptions
+// These are the query params to limit users on several endpoints
+type UsersDetailsOptions struct {
+	CampaignIds []string `query:"campaignIds"`
+	EndTime     *int64   `query:"endTime"`
+	Limit       *int     `query:"limit"`
+	Page        *int     `query:"page"`
+	Phrase      *string  `query:"phrase"`
+	StartTime   *int64   `query:"startTime"`
+	RoleIds     []string `query:"roleIds"`
+	Sort        *string  `query:"sort"`
+	SortType    *string  `query:"sortType"`
 }
