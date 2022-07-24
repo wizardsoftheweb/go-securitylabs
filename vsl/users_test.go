@@ -51,6 +51,7 @@ var (
 	testRoleIds = []string{
 		"5f5f190f9dad493352660d2c",
 		"5f5f19159dad493352660d2d",
+		"4acc432b734d1d55c318ef58",
 		testMissingRoleId,
 	}
 	testValidSorts = []string{
