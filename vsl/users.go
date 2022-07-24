@@ -167,6 +167,11 @@ type GetUserProgressResponse struct {
 	Lessons        []GetUserProgressLesson `json:"lessons"`
 }
 
+// TODO: The API docs call out pages as an optional parameter; how does this work?
+//type GetUserProgressOptions struct {
+//	Page *int `query:"page"`
+//}
+
 func (c *Client) GetUserProgress(ctx context.Context, userId string) (GetUserProgressResponse, error) {
 	// The only way to generate an error from Client.newRequest is if the body can't build
 	// Since we have no body, we can safely ignore the error
