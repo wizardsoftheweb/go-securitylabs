@@ -73,20 +73,6 @@ func (c *Client) GetUsers(ctx context.Context, options *GetUsersOptions) (GetUse
 	return responseBody, nil
 }
 
-// GetUsersDetailsPages
-// This is the format of the pages object on the /api/users/details endpoint
-// https://apidocs.hunter2.com/#get-users-details
-type GetUsersDetailsPages struct {
-	Current     int     `json:"current"`
-	Previous    *int    `json:"previous"`
-	Next        *int    `json:"next"`
-	Limit       int     `json:"limit"`
-	Total       int     `json:"total"`
-	CurrentUrl  string  `json:"currentUrl"`
-	NextUrl     *string `json:"nextUrl"`
-	PreviousUrl *string `json:"previousUrl"`
-}
-
 // GetUsersDetailsUsersRoles
 // This is the format of the roles object on the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
@@ -112,7 +98,7 @@ type GetUsersDetailsUsers struct {
 // This is the full body of the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
 type GetUsersDetailsResponse struct {
-	Pages GetUsersDetailsPages   `json:"pages"`
+	Pages Pages                  `json:"pages"`
 	Users []GetUsersDetailsUsers `json:"users"`
 }
 

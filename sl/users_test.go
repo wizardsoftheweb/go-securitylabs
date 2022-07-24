@@ -208,7 +208,7 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 	} else {
 		limit = *params.Limit
 	}
-	pages := GetUsersDetailsPages{
+	pages := Pages{
 		Current:  *currentPage,
 		Previous: previousPage,
 		Next:     nextPage,
