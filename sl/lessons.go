@@ -15,7 +15,8 @@
 package sl
 
 const (
-	GetLessonsPath = "/api/lessons"
+	GetLessonsPath         = "/api/lessons"
+	GetLessonsProgressPath = "/api/lessons/%s/progress"
 )
 
 // GetLessonsLesson
