@@ -429,3 +429,24 @@ func (suite *UsersTestSuite) TestClient_GetUsersDetails_NoOptions() {
 	suite.Nilf(detailsErr, "GetUsersDetails() should not return an error")
 	suite.Truef(len(details.Users) > 0, "GetUsersDetails() should return at least one user")
 }
+
+func (suite *UsersTestSuite) TestClient_GetUsersDetails_WithPage() {
+	page := new(int)
+	*page = 0
+	detailsPage0, detailsPage0Err := suite.client.GetUsersDetails(context.Background(), &GetUsersDetailsOptions{
+		Page: page,
+	})
+	suite.Nilf(detailsPage0Err, "GetUsersDetails() should not return an error")
+	suite.Truef(len(detailsPage0.Users) > 0, "GetUsersDetails() should return at least one user")
+	*page = 1
+	detailsPage1, detailsPage1Err := suite.client.GetUsersDetails(context.Background(), &GetUsersDetailsOptions{
+		Page: page,
+	})
+	suite.Nilf(detailsPage1Err, "GetUsersDetails() should not return an error")
+	suite.Truef(len(detailsPage1.Users) > 0, "GetUsersDetails() should return at least one user")
+	// TODO: How does the API handle pages that are out of range?
+	//*page = testMaxPage + 1
+	//details, detailsErr = suite.client.GetUsersDetails(context.Background(), &GetUsersDetailsOptions{
+	//	Page: page,
+	//})
+}
