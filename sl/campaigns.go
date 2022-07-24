@@ -17,3 +17,39 @@ package sl
 const (
 	GetCampaignsProgressPath = "/campaigns/progress"
 )
+
+// GetCampaignsProgressMilestones
+// This is the format of the milestones object on several components of the /api/campaigns/progress endpoint
+// https://apidocs.hunter2.com/#get-campaigns-progress
+type GetCampaignsProgressMilestones struct {
+	Total      int `json:"total"`
+	Finished   int `json:"finished"`
+	NotStarted int `json:"notStarted"`
+	Started    int `json:"started"`
+}
+
+// GetCampaignsProgressAssignmentsLabs
+// This is the format of the assignmentsLabs object on the assignments object on /api/campaigns/progress endpoint
+// https://apidocs.hunter2.com/#get-campaigns-progress
+type GetCampaignsProgressAssignmentsLabs struct {
+	Title      string                         `json:"title"`
+	Milestones GetCampaignsProgressMilestones `json:"milestones"`
+}
+
+// GetCampaignsProgressAssignments
+// This is the format of the assignments object on the /api/campaigns/progress endpoint
+// https://apidocs.hunter2.com/#get-campaigns-progress
+type GetCampaignsProgressAssignments struct {
+	Title string                                `json:"title"`
+	Labs  []GetCampaignsProgressAssignmentsLabs `json:"labs"`
+}
+
+// GetCampaignsProgressResponse
+// This is the full body of the /api/campaigns/progress endpoint
+// https://apidocs.hunter2.com/#get-campaigns-progress
+type GetCampaignsProgressResponse struct {
+	Milestones  GetCampaignsProgressMilestones    `json:"milestones"`
+	Assignments []GetCampaignsProgressAssignments `json:"assignments"`
+	Pages       Pages                             `json:"pages"`
+	Users       []UsersWithActivity               `json:"users"`
+}
