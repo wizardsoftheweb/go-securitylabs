@@ -34,6 +34,7 @@ const (
 	testMissingCampaignId = "qqq"
 	testMissingRoleId     = "qqq"
 	testLimitMin          = 0
+	testLimitDefault      = 10
 	testLimitMax          = 50
 	testPhraseMax         = 50
 	testTotal             = 100
@@ -186,7 +187,7 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 		currentPage = new(int)
 		*currentPage = 0
 		nextPage = new(int)
-		*nextPage = *params.Page + 1
+		*nextPage = *currentPage + 1
 	} else if *params.Page > testMaxPage {
 		currentPage = new(int)
 		*currentPage = *params.Page
@@ -200,12 +201,17 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 		previousPage = new(int)
 		*previousPage = *params.Page - 1
 	}
-	w.WriteHeader(http.StatusOK)
+	var limit int
+	if nil == params.Limit {
+		limit = testLimitDefault
+	} else {
+		limit = *params.Limit
+	}
 	pages := GetUsersDetailsPages{
-		Current:  *params.Page,
+		Current:  *currentPage,
 		Previous: previousPage,
 		Next:     nextPage,
-		Limit:    *params.Limit,
+		Limit:    limit,
 		Total:    testTotal,
 	}
 	currentParamsBytes, _ := urlquery.Marshal(params)
@@ -214,6 +220,7 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 		currentUrl := fmt.Sprintf("/api/users/details?%s", currentParams)
 		pages.CurrentUrl = currentUrl
 	} else {
+		// TODO: The docs show /api/onboarding; should this also be that?
 		pages.CurrentUrl = "/api/users/details"
 	}
 	params.Page = nextPage
@@ -224,6 +231,7 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 		pages.NextUrl = &nextUrl
 	} else {
 		pages.NextUrl = new(string)
+		// TODO: The docs show /api/onboarding; should this also be that?
 		*pages.NextUrl = "/api/users/details"
 	}
 	params.Page = previousPage
@@ -234,10 +242,13 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 		pages.PreviousUrl = &previousUrl
 	} else {
 		pages.PreviousUrl = new(string)
+		// TODO: The docs show /api/onboarding; should this also be that?
 		*pages.PreviousUrl = "/api/users/details"
 	}
 	pagesBytes, _ := json.Marshal(pages)
-	_, _ = w.Write([]byte(fmt.Sprintf(`{
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(fmt.Sprintf(
+		`{
   "pages": %s,
   "users": [{
     "id": "5f5f18439dad493352660d28",
@@ -251,7 +262,9 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
       "name": "Security"
     }]
   }]
-}`, string(pagesBytes))))
+}`,
+		string(pagesBytes),
+	)))
 }
 
 // GET /api/users/:id/progress
@@ -374,6 +387,7 @@ func TestUsersTestSuite(t *testing.T) {
 func (suite *UsersTestSuite) SetupTest() {
 	mux := http.NewServeMux()
 	mux.Handle("/users", http.HandlerFunc(handlerGetUsers))
+	mux.Handle(GetUsersDetailsPath, http.HandlerFunc(handlerGetUsersDetails))
 	suite.server = httptest.NewServer(mux)
 	suite.serverUrl, _ = url.Parse(suite.server.URL)
 	suite.client = NewClient(suite.serverUrl, nil)
@@ -409,3 +423,32 @@ func (suite *UsersTestSuite) TestClient_GetUsers_WithPages() {
 	//	Page: page,
 	//})
 }
+
+func (suite *UsersTestSuite) TestClient_GetUsersDetails_NoOptions() {
+	details, detailsErr := suite.client.GetUsersDetails(context.Background(), nil)
+	suite.Nilf(detailsErr, "GetUsersDetails() should not return an error")
+	suite.Truef(len(details.Users) > 0, "GetUsersDetails() should return at least one user")
+}
+
+func (suite *UsersTestSuite) TestClient_GetUsersDetails_WithPage() {
+	page := new(int)
+	*page = 0
+	detailsPage0, detailsPage0Err := suite.client.GetUsersDetails(context.Background(), &GetUsersDetailsOptions{
+		Page: page,
+	})
+	suite.Nilf(detailsPage0Err, "GetUsersDetails() should not return an error")
+	suite.Truef(len(detailsPage0.Users) > 0, "GetUsersDetails() should return at least one user")
+	*page = 1
+	detailsPage1, detailsPage1Err := suite.client.GetUsersDetails(context.Background(), &GetUsersDetailsOptions{
+		Page: page,
+	})
+	suite.Nilf(detailsPage1Err, "GetUsersDetails() should not return an error")
+	suite.Truef(len(detailsPage1.Users) > 0, "GetUsersDetails() should return at least one user")
+	// TODO: How does the API handle pages that are out of range?
+	//*page = testMaxPage + 1
+	//details, detailsErr = suite.client.GetUsersDetails(context.Background(), &GetUsersDetailsOptions{
+	//	Page: page,
+	//})
+}
+
+// TODO: GetUsersDetails: all the other options and conditions
