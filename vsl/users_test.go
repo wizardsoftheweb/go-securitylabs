@@ -308,7 +308,7 @@ func handlerGetUserProgress(w http.ResponseWriter, r *http.Request) {
 // https://apidocs.hunter2.com/#put-user
 // I have no idea if these are actually what the API returns
 func handlerPutUser(w http.ResponseWriter, r *http.Request) {
-	var user PutUser
+	var user UpdateDeleteUser
 	parseError := json.NewDecoder(r.Body).Decode(&user)
 	// TODO: is this the correct error?
 	if nil != parseError {

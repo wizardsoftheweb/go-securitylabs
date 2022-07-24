@@ -185,11 +185,11 @@ func (c *Client) GetUserProgress(ctx context.Context, userId string) (GetUserPro
 	return responseBody, nil
 }
 
-// PutUser
+// UpdateDeleteUser
 // This is the format of both the request and repsonse body of the
 // /api/user/:id endpoint
 // https://apidocs.hunter2.com/#put-user
-type PutUser struct {
+type UpdateDeleteUser struct {
 	Email    string   `json:"email"`
 	Name     string   `json:"name"`
 	Admin    bool     `json:"admin"`
