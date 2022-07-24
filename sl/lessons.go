@@ -63,3 +63,33 @@ type GetLessonsProgressResponse struct {
 	Roles    []RoleName               `json:"roles"`
 	Users    []GetLessonsProgressUser `json:"users"`
 }
+
+// GetLessonsSearchLesson
+// This is the format of the lesson object on the /api/lessons/search endpoint
+// https://apidocs.hunter2.com/#get-lesson-by-topic
+type GetLessonsSearchLesson struct {
+	Challenge   bool     `json:"challenge"`
+	Description string   `json:"description"`
+	Stack       string   `json:"stack"`
+	Tags        []string `json:"tags"`
+	Title       string   `json:"title"`
+	Topic       string   `json:"topic"`
+	Url         string   `json:"url"`
+}
+
+// GetLessonsSearchResponse
+// This is the full body of the /api/lessons/search endpoint
+// https://apidocs.hunter2.com/#get-lesson-by-topic
+type GetLessonsSearchResponse struct {
+	Pages   Pages                    `json:"pages"`
+	Lessons []GetLessonsSearchLesson `json:"lessons"`
+}
+
+// GetLessonsSearchOptions
+// These are the query params on the /api/lessons/search endpoint
+// https://apidocs.hunter2.com/#get-lesson-by-topic
+type GetLessonsSearchOptions struct {
+	Limit  int    `query:"limit"`
+	Page   int    `query:"page"`
+	Phrase string `query:"phrase"`
+}
