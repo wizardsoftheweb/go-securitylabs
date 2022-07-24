@@ -20,7 +20,8 @@ import (
 )
 
 const (
-	GetUsersPath = "/users"
+	GetUsersPath        = "/users"
+	GetUsersDetailsPath = "/users/details"
 )
 
 // GetUsersUsersRoles
@@ -125,6 +126,19 @@ type GetUsersDetailsOptions struct {
 	RoleIds     []string `query:"roleIds"`
 	Sort        *string  `query:"sort"`
 	SortType    *string  `query:"sortType"`
+}
+
+func (c *Client) GetUsersDetails(ctx context.Context, options *GetUsersDetailsOptions) (GetUsersDetailsResponse, error) {
+	// The only way to generate an error from Client.newRequest is if the body can't build
+	// Since we have no body, we can safely ignore the error
+	request, _ := c.newRequest(http.MethodGet, GetUsersDetailsPath, options, nil)
+	var responseBody GetUsersDetailsResponse
+	// TODO: Verify error makes sense once Client.do has been fully tested
+	_, responseError := c.do(ctx, request, &responseBody)
+	if nil != responseError {
+		return GetUsersDetailsResponse{}, responseError
+	}
+	return responseBody, nil
 }
 
 // GetUserProgressLesson
