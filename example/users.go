@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/wizardsoftheweb/go-securitylabs/vsl"
+	"github.com/wizardsoftheweb/go-securitylabs/sl"
 )
 
 func getUsers() {
-	client := vsl.NewClient(nil, nil)
+	client := sl.NewClient(nil, nil)
 	_ = client.SetAuthFromEnvironment()
 	users1, err1 := client.GetUsers(context.Background(), nil)
 	if nil != err1 {
@@ -33,7 +33,7 @@ func getUsers() {
 	}
 	page := new(int)
 	*page = 1
-	users2, err2 := client.GetUsers(context.Background(), &vsl.GetUsersOptions{Page: page})
+	users2, err2 := client.GetUsers(context.Background(), &sl.GetUsersOptions{Page: page})
 	if nil != err2 {
 		panic(err2)
 	}

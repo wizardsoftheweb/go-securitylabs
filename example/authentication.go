@@ -15,11 +15,11 @@
 package example
 
 import (
-	"github.com/wizardsoftheweb/go-securitylabs/vsl"
+	"github.com/wizardsoftheweb/go-securitylabs/sl"
 )
 
 func environmentAuth() {
-	client := vsl.NewClient(nil, nil)
+	client := sl.NewClient(nil, nil)
 	err := client.SetAuthFromEnvironment()
 	if nil != err {
 		panic(err)
@@ -27,6 +27,6 @@ func environmentAuth() {
 }
 
 func manualAuth() {
-	client := vsl.NewClient(nil, nil)
+	client := sl.NewClient(nil, nil)
 	client.SetAuth("key", "secret")
 }
