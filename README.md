@@ -68,7 +68,7 @@ None of these are in any particular order.
     - [ ] GET /api/roles/:id/progress?page=0
   - [ ] Invites
     - [ ] POST /api/invites
-- [ ] Mock all [the available URLs](https://apidocs.hunter2.com/#endpoints)
+- [ ] Mock all [the available URLs](https://apidocs.hunter2.com/#endpoints) (these need to be tested against a real account to verify branches)
   - [x] Authentication
   - [x] Users
     - [x] GET /api/users?page=0
