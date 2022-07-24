@@ -21,3 +21,4 @@
 
 * The [Get Users Details docs](https://apidocs.hunter2.com/#get-users-details) show `{current,next,previous}Url` as `/api/onboarding`; is this wrong?
 * [Get User Progress](https://apidocs.hunter2.com/#get-user-progress) mentions a `page` query param. There are no examples. It also says "page of users to get" but the response format has pages of lessons.
+* [Put User - Response Example](https://apidocs.hunter2.com/#put-user) misspells `disabled`.
