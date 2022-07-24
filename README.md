@@ -65,9 +65,9 @@ None of these are in any particular order.
     - [x] GET /api/lessons?page=0
     - [x] GET /api/lessons/:id/progress?page=0
     - [x] GET /api/lessons/search
-  - [ ] Roles
-    - [ ] GET /api/roles
-    - [ ] GET /api/roles/:id/progress?page=0
+  - [x] Roles
+    - [x] GET /api/roles
+    - [x] GET /api/roles/:id/progress?page=0
   - [ ] Invites
     - [ ] POST /api/invites
 - [ ] Collect all (as many as possible) of the responses from input permutations on [the available URLs](https://apidocs.hunter2.com/#endpoints) (needs a real account)
