@@ -67,3 +67,7 @@ type PageOptions struct {
 // RoleName
 // It's intended to be used when roles is the names, not the IDs
 type RoleName string
+
+// RoleId
+// It's intended to be used when roles is the IDs, not the names
+type RoleId string
