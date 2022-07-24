@@ -37,3 +37,29 @@ type GetLessonsResponse struct {
 	NextPage *string            `json:"nextPage"`
 	Lessons  []GetLessonsLesson `json:"lessons"`
 }
+
+// GetLessonsProgressUser
+// This is the format of the user object on the /api/lessons/{lessonId}/progress endpoint
+// https://apidocs.hunter2.com/#get-lessons-progress
+type GetLessonsProgressUser struct {
+	Id              string `json:"id"`
+	StartTime       *int64 `json:"startTime"`
+	EndTime         *int64 `json:"endTime"`
+	StartRating     *int   `json:"startRating"`
+	EndRating       *int   `json:"endRating"`
+	LastStepReached *int   `json:"lastStepReached"`
+	Status          string `json:"status"`
+}
+
+// GetLessonsProgressResponse
+// This is the full body of the /api/lessons/{lessonId}/progress endpoint
+// https://apidocs.hunter2.com/#get-lessons-progress
+type GetLessonsProgressResponse struct {
+	NextPage *string                  `json:"nextPage"`
+	Id       string                   `json:"id"`
+	Title    string                   `json:"title"`
+	Module   string                   `json:"module"`
+	Points   int                      `json:"points"`
+	Roles    []RoleName               `json:"roles"`
+	Users    []GetLessonsProgressUser `json:"users"`
+}
