@@ -40,6 +40,8 @@ I don't have access to a Veracode Security Labs account for testing. My current 
 
 Sometime soon I'll have all the GitHub niceties like a Contributing.md and issues templates.
 
+I have [several open questions](docs/open_questions.md).
+
 ## Tentative Roadmap
 
 None of these are in any particular order.
@@ -68,7 +70,7 @@ None of these are in any particular order.
     - [ ] GET /api/roles/:id/progress?page=0
   - [ ] Invites
     - [ ] POST /api/invites
-- [ ] Mock all [the available URLs](https://apidocs.hunter2.com/#endpoints)
+- [ ] Mock all [the available URLs](https://apidocs.hunter2.com/#endpoints) (these need to be tested against a real account to verify branches)
   - [x] Authentication
   - [x] Users
     - [x] GET /api/users?page=0
@@ -112,6 +114,7 @@ None of these are in any particular order.
     - [ ] GET /api/roles/:id/progress?page=0
   - [ ] Invites
     - [ ] POST /api/invites
+- [ ] Develop convenience methods for the API calls (eg `GetAllUsersDetails`)
 
 ### Housekeeping
 
