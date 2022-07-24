@@ -2,6 +2,10 @@
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
+## General
+
+* If something is marked `|Null` in the response, will it be `null` or will it be omitted when empty?
+
 ## Authentication
 
 [Docs](https://apidocs.hunter2.com/#authentication)
