@@ -572,7 +572,7 @@ func (suite *UsersDeleteTestSuite) SetupTest() {
 	mux := http.NewServeMux()
 	// We need to parse the URL because ID is part of it
 	// We could use a fancy server or we could be basic like this
-	mux.Handle("/", http.HandlerFunc(handlerPutUser))
+	mux.Handle("/", http.HandlerFunc(handlerDeleteUser))
 	suite.server = httptest.NewServer(mux)
 	suite.serverUrl, _ = url.Parse(suite.server.URL)
 	suite.client = NewClient(suite.serverUrl, nil)
@@ -580,4 +580,9 @@ func (suite *UsersDeleteTestSuite) SetupTest() {
 
 func (suite *UsersDeleteTestSuite) TearDownTest() {
 	suite.server.Close()
+}
+
+func (suite *UsersDeleteTestSuite) TestClient_DeleteUser_Success() {
+	deletedUserErr := suite.client.DeleteUser(context.Background(), testExistingUserIds[0])
+	suite.Nilf(deletedUserErr, "DeleteUser() should not return an error")
 }
