@@ -553,3 +553,6 @@ func (suite *UsersUpdateTestSuite) TestClient_PutUser_Success() {
 	suite.Equalf(user.Disabled, updatedUser.Disabled, "PutUser() should return the same disabled")
 	suite.Equalf(len(user.RoleIds), len(updatedUser.RoleIds), "PutUser() should return the same number of roles")
 }
+
+// TODO: PutUser: test the error cases
+// TODO: PutUser: test each field individually
