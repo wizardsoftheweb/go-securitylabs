@@ -29,6 +29,8 @@ My goal for this package is to provide a simple Go client for the Veracode Secur
 import "github.com/wizardsoftheweb/go-securitylabs/vsl"
 ```
 
+Check out [the examples](./example) for usage.
+
 I wanted to include [a Mermaid diagram](https://github.com/mermaid-js/mermaid) just because.
 
 ```mermaid
@@ -45,8 +47,6 @@ classDiagram
     -attachQueryParams(path string, options interface) string
   }
 ```
-
-Check out [the examples](./example) for usage.
 
 ## References
 
