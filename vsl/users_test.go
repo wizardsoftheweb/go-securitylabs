@@ -510,3 +510,28 @@ func (suite *UsersProgressTestSuite) TestClient_GetUserProgress_NoOptions() {
 
 // TODO: GetUserProgress: test the page option (once it's explained)
 // TODO: GetUserProgress: user failures
+
+type UsersUpdateTestSuite struct {
+	suite.Suite
+	server    *httptest.Server
+	serverUrl *url.URL
+	client    *Client
+}
+
+func TestUsersUpdateTestSuite(t *testing.T) {
+	suite.Run(t, new(UsersUpdateTestSuite))
+}
+
+func (suite *UsersUpdateTestSuite) SetupTest() {
+	mux := http.NewServeMux()
+	// We need to parse the URL because ID is part of it
+	// We could use a fancy server or we could be basic like this
+	mux.Handle("/", http.HandlerFunc(handlerPutUser))
+	suite.server = httptest.NewServer(mux)
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+}
+
+func (suite *UsersUpdateTestSuite) TearDownTest() {
+	suite.server.Close()
+}
