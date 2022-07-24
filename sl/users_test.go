@@ -309,7 +309,7 @@ func handlerGetUserProgress(w http.ResponseWriter, r *http.Request) {
 // https://apidocs.hunter2.com/#put-user
 // I have no idea if these are actually what the API returns
 func handlerPutUser(w http.ResponseWriter, r *http.Request) {
-	var user UpdateDeleteUser
+	var user PutUser
 	parseError := json.NewDecoder(r.Body).Decode(&user)
 	// TODO: is this the correct error?
 	if nil != parseError {
@@ -538,7 +538,7 @@ func (suite *UsersUpdateTestSuite) TearDownTest() {
 }
 
 func (suite *UsersUpdateTestSuite) TestClient_PutUser_Success() {
-	user := &UpdateDeleteUser{
+	user := &PutUser{
 		Email:    "test@hunter2.com",
 		Name:     "test",
 		Admin:    false,
@@ -556,3 +556,35 @@ func (suite *UsersUpdateTestSuite) TestClient_PutUser_Success() {
 
 // TODO: PutUser: test the error cases
 // TODO: PutUser: test each field individually
+
+type UsersDeleteTestSuite struct {
+	suite.Suite
+	server    *httptest.Server
+	serverUrl *url.URL
+	client    *Client
+}
+
+func TestUsersDeleteTestSuite(t *testing.T) {
+	suite.Run(t, new(UsersDeleteTestSuite))
+}
+
+func (suite *UsersDeleteTestSuite) SetupTest() {
+	mux := http.NewServeMux()
+	// We need to parse the URL because ID is part of it
+	// We could use a fancy server or we could be basic like this
+	mux.Handle("/", http.HandlerFunc(handlerDeleteUser))
+	suite.server = httptest.NewServer(mux)
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+}
+
+func (suite *UsersDeleteTestSuite) TearDownTest() {
+	suite.server.Close()
+}
+
+func (suite *UsersDeleteTestSuite) TestClient_DeleteUser_Success() {
+	deletedUserErr := suite.client.DeleteUser(context.Background(), testExistingUserIds[0])
+	suite.Nilf(deletedUserErr, "DeleteUser() should not return an error")
+}
+
+// TODO: DeleteUser: test the error cases

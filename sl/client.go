@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -120,7 +121,8 @@ func (c *Client) do(ctx context.Context, request *http.Request, v interface{}) (
 		return nil, requestError
 	}
 	defer (func() { _ = response.Body.Close() })()
-	parseError := json.NewDecoder(response.Body).Decode(v)
+	b, _ := ioutil.ReadAll(response.Body)
+	parseError := json.Unmarshal(b, v)
 	return response, parseError
 }
 
