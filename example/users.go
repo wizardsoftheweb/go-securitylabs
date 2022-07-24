@@ -31,6 +31,8 @@ func getUsers() {
 	for _, user := range users1 {
 		fmt.Printf("%+v\n", user)
 	}
+	page := new(int)
+	*page = 1
 	users2, err2 := client.GetUsers(context.Background(), &vsl.GetUsersOptions{Page: page})
 	if nil != err2 {
 		panic(err2)
