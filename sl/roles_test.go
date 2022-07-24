@@ -37,3 +37,26 @@ func handlerGetRoles(w http.ResponseWriter, r *http.Request) {
   ]
 }]`))
 }
+
+// GET /api/roles/4bd68695e165af6ced227afz/progress?page=0
+// responses pulled from
+// https://apidocs.hunter2.com/#get-role-progress
+// I have no idea if these are actually what the API returns
+func handlerGetRoleProgress(w http.ResponseWriter, r *http.Request) {
+	// TODO: handlerGetRoleProgress: implement
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	// TODO: Verify this isn't actually an array of these objects like the docs suggest
+	_, _ = w.Write([]byte(`{
+  "nextPage": "/api/roles/4bd68695e165af6ced227afz/progress?page=1",
+  "id": "4bd68695e165af6ced227afz",
+  "name": "Developers",
+  "users": [{
+    "id": "3bd68695e165af6ced227afc",
+    "email": "test@hunter2.com",
+    "name": "Test User",
+    "percentComplete": 50,
+    "percentRequiredComplete": 100
+  }]
+}`))
+}
