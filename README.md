@@ -114,6 +114,7 @@ None of these are in any particular order.
     - [ ] GET /api/roles/:id/progress?page=0
   - [ ] Invites
     - [ ] POST /api/invites
+- [ ] Develop convenience methods for the API calls (eg `GetAllUsersDetails`)
 
 ### Housekeeping
 
