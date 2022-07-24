@@ -83,8 +83,8 @@ None of these are in any particular order.
 
 ### Library
 
-- [ ] Get something simple pulled out of the wrapper article
-- [ ] Learn how to use `httptest.Server`
+- [x] Get something simple pulled out of the wrapper article
+- [x] Learn how to use `httptest.Server`
 - [ ] Build request and response structs for [each of the available URLs](https://apidocs.hunter2.com/#endpoints) (where applicable)
   - [x] Users
     - [x] GET /api/users?page=0

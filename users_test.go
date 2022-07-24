@@ -113,7 +113,7 @@ func handlerGetUsers(w http.ResponseWriter, r *http.Request) {
 // responses pulled from
 // https://apidocs.hunter2.com/#get-users-details
 // I have no idea if these are actually what the API returns
-func usersGetUsersDetailsTestHandler(w http.ResponseWriter, r *http.Request) {
+func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 	var params GetUsersDetailsOptions
 	_ = urlquery.Unmarshal([]byte(r.URL.RawQuery), &params)
 	for _, campaignId := range params.CampaignIds {
