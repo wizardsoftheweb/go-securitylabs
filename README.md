@@ -143,8 +143,8 @@ None of these are in any particular order.
 
 ### Housekeeping
 
-- [ ] Set up CI pipelines (GHA? CircleCI?)
-- [ ] Define nice status checks like code coverage
+- [x] Set up CI pipelines (GHA? CircleCI?)
+- [x] Define nice status checks like code coverage
 - [ ] Figure out godoc
 
 #### `golangci-lint`
