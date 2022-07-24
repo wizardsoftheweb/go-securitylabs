@@ -1,4 +1,4 @@
-module github.com/wizardsoftheweb/go-securitylabs
+module github.com/wizardsoftheweb/go-securitylabs/v0
 
 go 1.18
 
