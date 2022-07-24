@@ -17,3 +17,14 @@ package sl
 const (
 	GetLessonsPath = "/api/lessons"
 )
+
+// GetLessonsLesson
+// This is the format of the lesson object on the /api/lessons endpoint
+// https://apidocs.hunter2.com/#get-lessons
+type GetLessonsLesson struct {
+	Id     string     `json:"id"`
+	Title  string     `json:"title"`
+	Module string     `json:"module"`
+	Points int        `json:"points"`
+	Roles  []RoleName `json:"roles"`
+}
