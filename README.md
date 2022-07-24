@@ -70,7 +70,29 @@ None of these are in any particular order.
     - [ ] GET /api/roles/:id/progress?page=0
   - [ ] Invites
     - [ ] POST /api/invites
-- [ ] Mock all [the available URLs](https://apidocs.hunter2.com/#endpoints) (these need to be tested against a real account to verify branches)
+- [ ] Collect all (as many as possible) of the responses from input permutations on [the available URLs](https://apidocs.hunter2.com/#endpoints) (needs a real account)
+  - [ ] Authentication
+  - [ ] Users
+    - [ ] GET /api/users?page=0
+    - [ ] GET /api/users/details?page=0
+    - [ ] GET /api/users/:id/progress
+    - [ ] PUT /api/users/:id
+    - [ ] DELETE /api/users/:id
+  - [ ] Summaries
+    - [ ] GET /api/onboarding?page=0
+    - [ ] GET /api/progress?page=0
+    - [ ] GET /api/campaigns/progress?page=0
+    - [ ] GET /api/engagement/time
+  - [ ] Lessons
+    - [ ] GET /api/lessons?page=0
+    - [ ] GET /api/lessons/:id/progress?page=0
+    - [ ] GET /api/lessons/search
+  - [ ] Roles
+    - [ ] GET /api/roles
+    - [ ] GET /api/roles/:id/progress?page=0
+  - [ ] Invites
+    - [ ] POST /api/invites
+- [ ] Mock all [the available URLs](https://apidocs.hunter2.com/#endpoints) (these still need to be tested against a real account to verify branches; anything marked off has only been mocked against the docs)
   - [x] Authentication
   - [x] Users
     - [x] GET /api/users?page=0
