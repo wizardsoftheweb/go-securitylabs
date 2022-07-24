@@ -40,3 +40,10 @@ type UsersDetailsOptions struct {
 	Sort        *string  `query:"sort"`
 	SortType    *string  `query:"sortType"`
 }
+
+// RolesWithNames
+// This is a list of roles attached to a user on several endpoints
+type RolesWithNames struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}

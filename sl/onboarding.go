@@ -29,23 +29,15 @@ type GetOnboardingMilestones struct {
 	Started     int `json:"started"`
 }
 
-// GetOnboardingUsersRoles
-// This is a list of roles attached to a user on the /api/onboarding endpoint
-// https://apidocs.hunter2.com/#get-onboarding
-type GetOnboardingUsersRoles struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-}
-
 // GetOnboardingUsers
 // This is the format of the users object on the /api/onboarding endpoint
 // https://apidocs.hunter2.com/#get-onboarding
 type GetOnboardingUsers struct {
-	Id         string                    `json:"id"`
-	LastActive *int64                    `json:"lastActive"`
-	Milestone  string                    `json:"milestone"`
-	Name       string                    `json:"name"`
-	Roles      []GetOnboardingUsersRoles `json:"roles"`
+	Id         string           `json:"id"`
+	LastActive *int64           `json:"lastActive"`
+	Milestone  string           `json:"milestone"`
+	Name       string           `json:"name"`
+	Roles      []RolesWithNames `json:"roles"`
 }
 
 // GetOnboardingResponse
