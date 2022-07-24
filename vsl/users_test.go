@@ -272,7 +272,8 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 // https://apidocs.hunter2.com/#get-user-progress
 // I have no idea if these are actually what the API returns
 func handlerGetUserProgress(w http.ResponseWriter, r *http.Request) {
-	userId := strings.Replace(r.URL.RequestURI(), "/api/user/", "", 1)
+	userId := strings.Replace(r.URL.RequestURI(), "/users/", "", 1)
+	userId = strings.Replace(userId, "/progress", "", 1)
 	// TODO: How to test ID validity?
 	if 24 != len(userId) {
 		w.WriteHeader(http.StatusBadRequest)
@@ -315,7 +316,7 @@ func handlerPutUser(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte("{\"message\":\"Invalid request body\"}"))
 		return
 	}
-	userId := strings.Replace(r.URL.RequestURI(), "/api/user/", "", 1)
+	userId := strings.Replace(r.URL.RequestURI(), "/users/", "", 1)
 	// TODO: How to test ID validity?
 	if 24 != len(userId) {
 		w.WriteHeader(http.StatusBadRequest)
@@ -357,7 +358,7 @@ func handlerPutUser(w http.ResponseWriter, r *http.Request) {
 // https://apidocs.hunter2.com/#delete-user
 // I have no idea if these are actually what the API returns
 func handlerDeleteUser(w http.ResponseWriter, r *http.Request) {
-	userId := strings.Replace(r.URL.RequestURI(), "/api/user/", "", 1)
+	userId := strings.Replace(r.URL.RequestURI(), "/users/", "", 1)
 	// TODO: How to test ID validity?
 	if 24 != len(userId) {
 		w.WriteHeader(http.StatusBadRequest)
@@ -386,8 +387,7 @@ func TestUsersTestSuite(t *testing.T) {
 
 func (suite *UsersTestSuite) SetupTest() {
 	mux := http.NewServeMux()
-	mux.Handle("/users", http.HandlerFunc(handlerGetUsers))
-	mux.Handle(GetUsersDetailsPath, http.HandlerFunc(handlerGetUsersDetails))
+	mux.Handle(GetUsersPath, http.HandlerFunc(handlerGetUsers))
 	suite.server = httptest.NewServer(mux)
 	suite.serverUrl, _ = url.Parse(suite.server.URL)
 	suite.client = NewClient(suite.serverUrl, nil)
@@ -424,13 +424,36 @@ func (suite *UsersTestSuite) TestClient_GetUsers_WithPages() {
 	//})
 }
 
-func (suite *UsersTestSuite) TestClient_GetUsersDetails_NoOptions() {
+type UsersDetailsTestSuite struct {
+	suite.Suite
+	server    *httptest.Server
+	serverUrl *url.URL
+	client    *Client
+}
+
+func TestUsersDetailsTestSuite(t *testing.T) {
+	suite.Run(t, new(UsersDetailsTestSuite))
+}
+
+func (suite *UsersDetailsTestSuite) SetupTest() {
+	mux := http.NewServeMux()
+	mux.Handle(GetUsersDetailsPath, http.HandlerFunc(handlerGetUsersDetails))
+	suite.server = httptest.NewServer(mux)
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+}
+
+func (suite *UsersDetailsTestSuite) TearDownTest() {
+	suite.server.Close()
+}
+
+func (suite *UsersDetailsTestSuite) TestClient_GetUsersDetails_NoOptions() {
 	details, detailsErr := suite.client.GetUsersDetails(context.Background(), nil)
 	suite.Nilf(detailsErr, "GetUsersDetails() should not return an error")
 	suite.Truef(len(details.Users) > 0, "GetUsersDetails() should return at least one user")
 }
 
-func (suite *UsersTestSuite) TestClient_GetUsersDetails_WithPage() {
+func (suite *UsersDetailsTestSuite) TestClient_GetUsersDetails_WithPage() {
 	page := new(int)
 	*page = 0
 	detailsPage0, detailsPage0Err := suite.client.GetUsersDetails(context.Background(), &GetUsersDetailsOptions{
@@ -452,3 +475,38 @@ func (suite *UsersTestSuite) TestClient_GetUsersDetails_WithPage() {
 }
 
 // TODO: GetUsersDetails: all the other options and conditions
+
+type UsersProgressTestSuite struct {
+	suite.Suite
+	server    *httptest.Server
+	serverUrl *url.URL
+	client    *Client
+}
+
+func TestUsersProgressTestSuite(t *testing.T) {
+	suite.Run(t, new(UsersProgressTestSuite))
+}
+
+func (suite *UsersProgressTestSuite) SetupTest() {
+	mux := http.NewServeMux()
+	// We need to parse the URL because ID is part of it
+	// We could use a fancy server or we could be basic like this
+	mux.Handle("/", http.HandlerFunc(handlerGetUserProgress))
+	suite.server = httptest.NewServer(mux)
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+}
+
+func (suite *UsersProgressTestSuite) TearDownTest() {
+	suite.server.Close()
+}
+
+func (suite *UsersProgressTestSuite) TestClient_GetUserProgress_NoOptions() {
+	progress, progressErr := suite.client.GetUserProgress(context.Background(), testExistingUserIds[0])
+	fmt.Printf("%+v\n", progress)
+	suite.Nilf(progressErr, "GetUsersProgress() should not return an error")
+	suite.Truef(len(progress.Lessons) > 0, "GetUsersProgress() should return at least one lesson")
+}
+
+// TODO: GetUserProgress: test the page option (once it's explained)
+// TODO: GetUserProgress: user failures
