@@ -27,10 +27,10 @@ const (
 	UpdateDeleteUserPath = "/users/%s"
 )
 
-// GetUsersUsers
+// GetUsersUser
 // These are all the properties of a user from the /api/user endpoint
 // https://apidocs.hunter2.com/#get-users
-type GetUsersUsers struct {
+type GetUsersUser struct {
 	Id         string   `json:"id"`
 	IsAdmin    bool     `json:"isAdmin"`
 	IsDisabled bool     `json:"isDisabled"`
@@ -44,8 +44,8 @@ type GetUsersUsers struct {
 // This is the full body of the /api/user endpoint
 // https://apidocs.hunter2.com/#get-users
 type GetUsersResponse struct {
-	NextPage *string         `json:"nextPage"`
-	Users    []GetUsersUsers `json:"users"`
+	NextPage *string        `json:"nextPage"`
+	Users    []GetUsersUser `json:"users"`
 }
 
 func (c *Client) GetUsers(ctx context.Context, options *PageOptions) (GetUsersResponse, error) {
@@ -69,10 +69,10 @@ type GetUsersDetailsUsersRoles struct {
 	Name string `json:"name"`
 }
 
-// GetUsersDetailsUsers
+// GetUsersDetailsUser
 // This is the format of the users object on the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
-type GetUsersDetailsUsers struct {
+type GetUsersDetailsUser struct {
 	Id                       string         `json:"id"`
 	LastActive               *int64         `json:"lastActive"`
 	LabsCompleted            int            `json:"labsCompleted"`
@@ -86,8 +86,8 @@ type GetUsersDetailsUsers struct {
 // This is the full body of the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
 type GetUsersDetailsResponse struct {
-	Pages Pages                  `json:"pages"`
-	Users []GetUsersDetailsUsers `json:"users"`
+	Pages Pages                 `json:"pages"`
+	Users []GetUsersDetailsUser `json:"users"`
 }
 
 func (c *Client) GetUsersDetails(ctx context.Context, options *UsersDetailsOptions) (GetUsersDetailsResponse, error) {

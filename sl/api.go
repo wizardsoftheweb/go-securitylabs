@@ -56,9 +56,9 @@ type RoleComplete struct {
 	Name RoleName `json:"name"`
 }
 
-// UsersWithActivity
+// UserWithActivity
 // This is the format of the users object on several endpoints
-type UsersWithActivity struct {
+type UserWithActivity struct {
 	Id         string         `json:"id"`
 	LastActive *int64         `json:"lastActive"`
 	Milestone  string         `json:"milestone"`

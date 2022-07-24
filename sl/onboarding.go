@@ -35,5 +35,5 @@ type GetOnboardingMilestones struct {
 type GetOnboardingResponse struct {
 	Milestones GetOnboardingMilestones `json:"milestones"`
 	Pages      Pages                   `json:"pages"`
-	Users      []UsersWithActivity     `json:"users"`
+	Users      []UserWithActivity      `json:"users"`
 }

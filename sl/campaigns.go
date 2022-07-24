@@ -28,30 +28,30 @@ type GetCampaignsProgressMilestones struct {
 	Started    int `json:"started"`
 }
 
-// GetCampaignsProgressAssignmentsLabs
+// GetCampaignsProgressAssignmentsLab
 // This is the format of the assignmentsLabs object on the assignments object on /api/campaigns/progress endpoint
 // https://apidocs.hunter2.com/#get-campaigns-progress
-type GetCampaignsProgressAssignmentsLabs struct {
+type GetCampaignsProgressAssignmentsLab struct {
 	Title      string                         `json:"title"`
 	Milestones GetCampaignsProgressMilestones `json:"milestones"`
 }
 
-// GetCampaignsProgressAssignments
+// GetCampaignsProgressAssignment
 // This is the format of the assignments object on the /api/campaigns/progress endpoint
 // https://apidocs.hunter2.com/#get-campaigns-progress
-type GetCampaignsProgressAssignments struct {
-	Title string                                `json:"title"`
-	Labs  []GetCampaignsProgressAssignmentsLabs `json:"labs"`
+type GetCampaignsProgressAssignment struct {
+	Title string                               `json:"title"`
+	Labs  []GetCampaignsProgressAssignmentsLab `json:"labs"`
 }
 
 // GetCampaignsProgressResponse
 // This is the full body of the /api/campaigns/progress endpoint
 // https://apidocs.hunter2.com/#get-campaigns-progress
 type GetCampaignsProgressResponse struct {
-	Milestones  GetCampaignsProgressMilestones    `json:"milestones"`
-	Assignments []GetCampaignsProgressAssignments `json:"assignments"`
-	Pages       Pages                             `json:"pages"`
-	Users       []UsersWithActivity               `json:"users"`
+	Milestones  GetCampaignsProgressMilestones   `json:"milestones"`
+	Assignments []GetCampaignsProgressAssignment `json:"assignments"`
+	Pages       Pages                            `json:"pages"`
+	Users       []UserWithActivity               `json:"users"`
 }
 
 // GetCampaignsProgessOptions
