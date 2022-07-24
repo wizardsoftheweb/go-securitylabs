@@ -215,7 +215,8 @@ func (c *Client) DeleteUser(ctx context.Context, userId string) error {
 	// The only way to generate an error from Client.newRequest is if the body can't build
 	// Since we have no body, we can safely ignore the error
 	request, _ := c.newRequest(http.MethodDelete, fmt.Sprintf(UpdateDeleteUserPath, userId), nil, nil)
-	_, responseError := c.do(ctx, request, nil)
+	var responseBody interface{}
+	_, responseError := c.do(ctx, request, &responseBody)
 	if nil != responseError {
 		return responseError
 	}
