@@ -53,14 +53,7 @@ type GetUsersResponse struct {
 	Users    []GetUsersUsers `json:"users"`
 }
 
-// GetUsersOptions
-// These are the query params for the /api/users endpoint
-// https://apidocs.hunter2.com/#get-users
-type GetUsersOptions struct {
-	Page *int `query:"page"`
-}
-
-func (c *Client) GetUsers(ctx context.Context, options *GetUsersOptions) (GetUsersResponse, error) {
+func (c *Client) GetUsers(ctx context.Context, options *PageOptions) (GetUsersResponse, error) {
 	// The only way to generate an error from Client.newRequest is if the body can't build
 	// Since we have no body, we can safely ignore the error
 	request, _ := c.newRequest(http.MethodGet, GetUsersPath, options, nil)

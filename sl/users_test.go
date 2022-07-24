@@ -86,7 +86,7 @@ func listContains(list []string, item string) bool {
 // https://apidocs.hunter2.com/#get-users
 // I have no idea if these are actually what the API returns
 func handlerGetUsers(w http.ResponseWriter, r *http.Request) {
-	var params GetUsersOptions
+	var params PageOptions
 	_ = urlquery.Unmarshal([]byte(r.URL.RawQuery), &params)
 	var page string
 	if nil == params.Page || *params.Page > testMaxPage {
@@ -408,20 +408,20 @@ func (suite *UsersTestSuite) TestClient_GetUsers_NoPages() {
 func (suite *UsersTestSuite) TestClient_GetUsers_WithPages() {
 	page := new(int)
 	*page = 0
-	usersPage0, usersPage0Err := suite.client.GetUsers(context.Background(), &GetUsersOptions{
+	usersPage0, usersPage0Err := suite.client.GetUsers(context.Background(), &PageOptions{
 		Page: page,
 	})
 	suite.Nilf(usersPage0Err, "GetUsers() should not return an error")
 	suite.Truef(len(usersPage0.Users) > 0, "GetUsers() should return at least one user")
 	*page = 1
-	usersPage1, usersPage1Err := suite.client.GetUsers(context.Background(), &GetUsersOptions{
+	usersPage1, usersPage1Err := suite.client.GetUsers(context.Background(), &PageOptions{
 		Page: page,
 	})
 	suite.Nilf(usersPage1Err, "GetUsers() should not return an error")
 	suite.Truef(len(usersPage1.Users) > 0, "GetUsers() should return at least one user")
 	// TODO: How does the API handle pages that are out of range?
 	//*page = testMaxPage + 1
-	//users, usersErr = suite.client.GetUsers(context.Background(), &GetUsersOptions{
+	//users, usersErr = suite.client.GetUsers(context.Background(), &PageOptions{
 	//	Page: page,
 	//})
 }

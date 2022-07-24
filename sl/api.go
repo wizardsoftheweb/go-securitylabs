@@ -57,3 +57,9 @@ type UsersWithActivity struct {
 	Name       string           `json:"name"`
 	Roles      []RolesWithNames `json:"roles"`
 }
+
+// PageOptions
+// This handles options for endpoints that only allow page as a param
+type PageOptions struct {
+	Page *int `query:"page"`
+}
