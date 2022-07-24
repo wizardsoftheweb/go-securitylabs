@@ -51,6 +51,7 @@ var (
 	testRoleIds = []string{
 		"5f5f190f9dad493352660d2c",
 		"5f5f19159dad493352660d2d",
+		"4acc432b734d1d55c318ef58",
 		testMissingRoleId,
 	}
 	testValidSorts = []string{
@@ -308,7 +309,7 @@ func handlerGetUserProgress(w http.ResponseWriter, r *http.Request) {
 // https://apidocs.hunter2.com/#put-user
 // I have no idea if these are actually what the API returns
 func handlerPutUser(w http.ResponseWriter, r *http.Request) {
-	var user PutUser
+	var user UpdateDeleteUser
 	parseError := json.NewDecoder(r.Body).Decode(&user)
 	// TODO: is this the correct error?
 	if nil != parseError {
@@ -510,3 +511,48 @@ func (suite *UsersProgressTestSuite) TestClient_GetUserProgress_NoOptions() {
 
 // TODO: GetUserProgress: test the page option (once it's explained)
 // TODO: GetUserProgress: user failures
+
+type UsersUpdateTestSuite struct {
+	suite.Suite
+	server    *httptest.Server
+	serverUrl *url.URL
+	client    *Client
+}
+
+func TestUsersUpdateTestSuite(t *testing.T) {
+	suite.Run(t, new(UsersUpdateTestSuite))
+}
+
+func (suite *UsersUpdateTestSuite) SetupTest() {
+	mux := http.NewServeMux()
+	// We need to parse the URL because ID is part of it
+	// We could use a fancy server or we could be basic like this
+	mux.Handle("/", http.HandlerFunc(handlerPutUser))
+	suite.server = httptest.NewServer(mux)
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+}
+
+func (suite *UsersUpdateTestSuite) TearDownTest() {
+	suite.server.Close()
+}
+
+func (suite *UsersUpdateTestSuite) TestClient_PutUser_Success() {
+	user := &UpdateDeleteUser{
+		Email:    "test@hunter2.com",
+		Name:     "test",
+		Admin:    false,
+		Disabled: false,
+		RoleIds:  []string{"4acc432b734d1d55c318ef58"},
+	}
+	updatedUser, updatedUserErr := suite.client.PutUser(context.Background(), testExistingUserIds[0], user)
+	suite.Nilf(updatedUserErr, "PutUser() should not return an error")
+	suite.Equalf(user.Email, updatedUser.Email, "PutUser() should return the same email")
+	suite.Equalf(user.Name, updatedUser.Name, "PutUser() should return the same name")
+	suite.Equalf(user.Admin, updatedUser.Admin, "PutUser() should return the same admin")
+	suite.Equalf(user.Disabled, updatedUser.Disabled, "PutUser() should return the same disabled")
+	suite.Equalf(len(user.RoleIds), len(updatedUser.RoleIds), "PutUser() should return the same number of roles")
+}
+
+// TODO: PutUser: test the error cases
+// TODO: PutUser: test each field individually
