@@ -34,6 +34,7 @@ const (
 	testMissingCampaignId = "qqq"
 	testMissingRoleId     = "qqq"
 	testLimitMin          = 0
+	testLimitDefault      = 10
 	testLimitMax          = 50
 	testPhraseMax         = 50
 	testTotal             = 100
@@ -186,7 +187,7 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 		currentPage = new(int)
 		*currentPage = 0
 		nextPage = new(int)
-		*nextPage = *params.Page + 1
+		*nextPage = *currentPage + 1
 	} else if *params.Page > testMaxPage {
 		currentPage = new(int)
 		*currentPage = *params.Page
@@ -200,12 +201,17 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 		previousPage = new(int)
 		*previousPage = *params.Page - 1
 	}
-	w.WriteHeader(http.StatusOK)
+	var limit int
+	if nil == params.Limit {
+		limit = testLimitDefault
+	} else {
+		limit = *params.Limit
+	}
 	pages := GetUsersDetailsPages{
-		Current:  *params.Page,
+		Current:  *currentPage,
 		Previous: previousPage,
 		Next:     nextPage,
-		Limit:    *params.Limit,
+		Limit:    limit,
 		Total:    testTotal,
 	}
 	currentParamsBytes, _ := urlquery.Marshal(params)
@@ -237,7 +243,9 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 		*pages.PreviousUrl = "/api/users/details"
 	}
 	pagesBytes, _ := json.Marshal(pages)
-	_, _ = w.Write([]byte(fmt.Sprintf(`{
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(fmt.Sprintf(
+		`{
   "pages": %s,
   "users": [{
     "id": "5f5f18439dad493352660d28",
@@ -251,7 +259,9 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
       "name": "Security"
     }]
   }]
-}`, string(pagesBytes))))
+}`,
+		string(pagesBytes),
+	)))
 }
 
 // GET /api/users/:id/progress
@@ -409,4 +419,10 @@ func (suite *UsersTestSuite) TestClient_GetUsers_WithPages() {
 	//users, usersErr = suite.client.GetUsers(context.Background(), &GetUsersOptions{
 	//	Page: page,
 	//})
+}
+
+func (suite *UsersTestSuite) TestClient_GetUsersDetails_NoOptions() {
+	details, detailsErr := suite.client.GetUsersDetails(context.Background(), nil)
+	suite.Nilf(detailsErr, "GetUsersDetails() should not return an error")
+	suite.Truef(len(details.Users) > 0, "GetUsersDetails() should return at least one user")
 }
