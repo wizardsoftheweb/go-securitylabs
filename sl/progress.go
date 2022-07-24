@@ -18,10 +18,10 @@ const (
 	GetProgressPath = "/progress"
 )
 
-// GetProgressUsersLessons
+// GetProgressUsersLesson
 // This is the format of the lessons object on the users object on the /api/progress endpoint
 // https://apidocs.hunter2.com/#get-progress
-type GetProgressUsersLessons struct {
+type GetProgressUsersLesson struct {
 	LessonId   string  `json:"lessonId"`
 	LessonName string  `json:"lessonName"`
 	Module     string  `json:"module"`
@@ -33,19 +33,19 @@ type GetProgressUsersLessons struct {
 // This is the format of the users object on the /api/progress endpoint
 // https://apidocs.hunter2.com/#get-progress
 type GetProgressUsers struct {
-	Id                        string                    `json:"id"`
-	Email                     string                    `json:"email"`
-	Name                      string                    `json:"name"`
-	LabsCompleted             int                       `json:"labsCompleted"`
-	LastActive                int64                     `json:"lastActive"`
-	TotalPoints               int                       `json:"totalPoints"`
-	LabsStarted               int                       `json:"labsStarted"`
-	AccountDisabled           bool                      `json:"accountDisabled"`
-	RequiredCompletionPercent int                       `json:"requiredCompletionPercent"`
-	PointsRequired            int                       `json:"pointsRequired"`
-	PointsPossible            int                       `json:"pointsPossible"`
-	Lessons                   []GetProgressUsersLessons `json:"lessons"`
-	Roles                     []RoleName                `json:"roles"`
+	Id                        string                   `json:"id"`
+	Email                     string                   `json:"email"`
+	Name                      string                   `json:"name"`
+	LabsCompleted             int                      `json:"labsCompleted"`
+	LastActive                int64                    `json:"lastActive"`
+	TotalPoints               int                      `json:"totalPoints"`
+	LabsStarted               int                      `json:"labsStarted"`
+	AccountDisabled           bool                     `json:"accountDisabled"`
+	RequiredCompletionPercent int                      `json:"requiredCompletionPercent"`
+	PointsRequired            int                      `json:"pointsRequired"`
+	PointsPossible            int                      `json:"pointsPossible"`
+	Lessons                   []GetProgressUsersLesson `json:"lessons"`
+	Roles                     []RoleName               `json:"roles"`
 }
 
 // GetProgressResponse

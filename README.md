@@ -56,15 +56,15 @@ None of these are in any particular order.
     - [x] GET /api/users/details?page=0
     - [x] GET /api/users/:id/progress
     - [x] PUT /api/users/:id
-  - [ ] Summaries
-    - [ ] GET /api/onboarding?page=0
-    - [ ] GET /api/progress?page=0
-    - [ ] GET /api/campaigns/progress?page=0
-    - [ ] GET /api/engagement/time
-  - [ ] Lessons
-    - [ ] GET /api/lessons?page=0
-    - [ ] GET /api/lessons/:id/progress?page=0
-    - [ ] GET /api/lessons/search
+  - [x] Summaries
+    - [x] GET /api/onboarding?page=0
+    - [x] GET /api/progress?page=0
+    - [x] GET /api/campaigns/progress?page=0
+    - [x] GET /api/engagement/time
+  - [x] Lessons
+    - [x] GET /api/lessons?page=0
+    - [x] GET /api/lessons/:id/progress?page=0
+    - [x] GET /api/lessons/search
   - [ ] Roles
     - [ ] GET /api/roles
     - [ ] GET /api/roles/:id/progress?page=0
