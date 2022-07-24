@@ -71,3 +71,7 @@ type UserWithActivity struct {
 type PageOptions struct {
 	Page *int `query:"page"`
 }
+
+// UserId
+// It's intended to be used when users is the IDs, not the names
+type UserId string

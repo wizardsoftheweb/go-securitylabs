@@ -25,5 +25,14 @@
 
 ## Summaries
 
+[Docs](https://apidocs.hunter2.com/#summaries-2)
+
 * [Get Progress](https://apidocs.hunter2.com/#get-progress) has an `.users[].lessons[].startTime` field that's specified as `Number`. Is it possible this should be `Number|Null`?
 * [Get Progress](https://apidocs.hunter2.com/#get-progress) has an `.users[].lessons[].endTime` field that's specified as `String|Null` but is returned as, I think, a Unix timestamp.
+
+## Roles
+
+[Docs](https://apidocs.hunter2.com/#roles-2)
+
+* [Get Roles](https://apidocs.hunter2.com/#get-roles) has the potential to be large. Does it paginate?
+* [Get Role Progress](https://apidocs.hunter2.com/#get-role-progress) appears to return `[{}]`. However, it also has a `[].nextPage`. Since it's returning the progress for a single role, should the entire response be `[{}]` or do the pages just apply to the `users` within the output?
