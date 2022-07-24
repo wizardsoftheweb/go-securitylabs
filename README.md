@@ -31,11 +31,11 @@ My goal for this package is to provide a simple Go client for the Veracode Secur
 ### Importing
 
 ```bash
-go get github.com/wizardsoftheweb/go-securitylabs/v0/vsl
+go get github.com/wizardsoftheweb/go-securitylabs/vsl
 ```
 
 ```go
-import "github.com/wizardsoftheweb/go-securitylabs/v0/vsl"
+import "github.com/wizardsoftheweb/go-securitylabs/vsl"
 ```
 
 ### Authentication
