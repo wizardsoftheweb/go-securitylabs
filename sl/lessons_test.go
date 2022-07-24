@@ -37,3 +37,32 @@ func handlerGetLessons(w http.ResponseWriter, r *http.Request) {
   }]
 }`))
 }
+
+// GET /api/lessons/:id/progress?page=0
+// responses pulled from
+// https://apidocs.hunter2.com/#get-lesson-progress
+// I have no idea if these are actually what the API returns
+func handlerGetLessonProgress(w http.ResponseWriter, r *http.Request) {
+	// TODO: handlerGetLessonProgress: implement
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(`{
+  "nextPage": "/api/lessons/5a5999d4ca50092ec5345ec4/progress?page=1",
+  "id": "5a5999d4ca50092ec5345ec4",
+  "title": "Own the database",
+  "module": "OWASP #1: Injection",
+  "points": 30,
+  "roles": [
+    "Developers"
+  ],
+  "users": [{
+    "id": "3bd68695e165af6ced227afc",
+    "startTime": 1551673334046,
+    "endTime": 1551673334047,
+    "startRating": 1,
+    "endRating": 4,
+    "lastStepReached": 1,
+    "status": "Started"
+  }]
+}`))
+}
