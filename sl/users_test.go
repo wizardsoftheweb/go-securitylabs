@@ -586,3 +586,5 @@ func (suite *UsersDeleteTestSuite) TestClient_DeleteUser_Success() {
 	deletedUserErr := suite.client.DeleteUser(context.Background(), testExistingUserIds[0])
 	suite.Nilf(deletedUserErr, "DeleteUser() should not return an error")
 }
+
+// TODO: DeleteUser: test the error cases
