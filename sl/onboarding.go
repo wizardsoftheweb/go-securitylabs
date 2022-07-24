@@ -14,6 +14,10 @@
 
 package sl
 
+const (
+	GetOnboardingPath = "/onboarding"
+)
+
 // GetOnboardingMilestones
 // This is the format of the milestones object on the /api/onboarding endpoint
 // https://apidocs.hunter2.com/#get-onboarding
