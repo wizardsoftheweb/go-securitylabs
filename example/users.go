@@ -23,7 +23,7 @@ import (
 
 func getUsers() {
 	client := vsl.NewClient(nil, nil)
-	client.SetAuthFromEnvironment()
+	_ = client.SetAuthFromEnvironment()
 	users1, err1 := client.GetUsers(context.Background(), nil)
 	if nil != err1 {
 		panic(err1)
