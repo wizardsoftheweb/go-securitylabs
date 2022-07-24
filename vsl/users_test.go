@@ -507,3 +507,6 @@ func (suite *UsersProgressTestSuite) TestClient_GetUserProgress_NoOptions() {
 	suite.Nilf(progressErr, "GetUsersProgress() should not return an error")
 	suite.Truef(len(progress.Lessons) > 0, "GetUsersProgress() should return at least one lesson")
 }
+
+// TODO: GetUserProgress: test the page option (once it's explained)
+// TODO: GetUserProgress: user failures
