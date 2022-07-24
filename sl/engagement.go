@@ -14,6 +14,10 @@
 
 package sl
 
+const (
+	GetEngagementTimePath = "/api/engagement/time"
+)
+
 // GetEngagementTimeResponse
 // This is the full body of the /api/engagement/time endpoint
 // https://apidocs.hunter2.com/#get-engagement-time
