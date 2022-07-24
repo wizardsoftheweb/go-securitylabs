@@ -29,3 +29,13 @@ type PostInvites struct {
 	Admin     bool     `json:"admin"`
 	SendEmail bool     `json:"sendEmail"`
 }
+
+// PostInvitesResponse
+// This is the format of the response body on the /api/invites endpoint
+// https://apidocs.hunter2.com/#post-invites
+type PostInvitesResponse struct {
+	Email    string   `json:"email"`
+	Admin    bool     `json:"admin"`
+	RoleIds  []RoleId `json:"roleIds"`
+	SenderId UserId   `json:"senderId"`
+}
