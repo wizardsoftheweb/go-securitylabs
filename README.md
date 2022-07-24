@@ -26,6 +26,8 @@ My goal for this package is to provide a simple Go client for the Veracode Secur
 import "github.com/wizardsoftheweb/go-securitylabs/vsl"
 ```
 
+Check out [the examples](./example) for usage.
+
 ## References
 
 - [Veracode Security Labs API Docs](https://apidocs.hunter2.com/)
