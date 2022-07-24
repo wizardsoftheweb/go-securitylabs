@@ -27,22 +27,17 @@ const (
 	UpdateDeleteUserPath = "/users/%s"
 )
 
-// GetUsersUsersRoles
-// This is a list of roles attached to a user
-// https://apidocs.hunter2.com/#get-users
-type GetUsersUsersRoles []string
-
 // GetUsersUsers
 // These are all the properties of a user from the /api/user endpoint
 // https://apidocs.hunter2.com/#get-users
 type GetUsersUsers struct {
-	Id         string             `json:"id"`
-	IsAdmin    bool               `json:"isAdmin"`
-	IsDisabled bool               `json:"isDisabled"`
-	Email      string             `json:"email"`
-	Joined     bool               `json:"joined"`
-	LastActive int64              `json:"lastActive"`
-	Roles      GetUsersUsersRoles `json:"roles"`
+	Id         string   `json:"id"`
+	IsAdmin    bool     `json:"isAdmin"`
+	IsDisabled bool     `json:"isDisabled"`
+	Email      string   `json:"email"`
+	Joined     bool     `json:"joined"`
+	LastActive int64    `json:"lastActive"`
+	Roles      []RoleId `json:"roles"`
 }
 
 // GetUsersResponse
@@ -78,13 +73,13 @@ type GetUsersDetailsUsersRoles struct {
 // This is the format of the users object on the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
 type GetUsersDetailsUsers struct {
-	Id                       string                      `json:"id"`
-	LastActive               *int64                      `json:"lastActive"`
-	LabsCompleted            int                         `json:"labsCompleted"`
-	PercentRequiredCompleted float64                     `json:"percentRequiredCompleted"`
-	Points                   int                         `json:"points"`
-	Name                     string                      `json:"name"`
-	Roles                    []GetUsersDetailsUsersRoles `json:"roles"`
+	Id                       string         `json:"id"`
+	LastActive               *int64         `json:"lastActive"`
+	LabsCompleted            int            `json:"labsCompleted"`
+	PercentRequiredCompleted float64        `json:"percentRequiredCompleted"`
+	Points                   int            `json:"points"`
+	Name                     string         `json:"name"`
+	Roles                    []RoleComplete `json:"roles"`
 }
 
 // GetUsersDetailsResponse

@@ -41,29 +41,6 @@ type UsersDetailsOptions struct {
 	SortType    *string  `query:"sortType"`
 }
 
-// RolesWithNames
-// This is a list of roles attached to a user on several endpoints
-type RolesWithNames struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-}
-
-// UsersWithActivity
-// This is the format of the users object on several endpoints
-type UsersWithActivity struct {
-	Id         string           `json:"id"`
-	LastActive *int64           `json:"lastActive"`
-	Milestone  string           `json:"milestone"`
-	Name       string           `json:"name"`
-	Roles      []RolesWithNames `json:"roles"`
-}
-
-// PageOptions
-// This handles options for endpoints that only allow page as a param
-type PageOptions struct {
-	Page *int `query:"page"`
-}
-
 // RoleName
 // It's intended to be used when roles is the names, not the IDs
 type RoleName string
@@ -71,3 +48,26 @@ type RoleName string
 // RoleId
 // It's intended to be used when roles is the IDs, not the names
 type RoleId string
+
+// RoleComplete
+// This is a list of roles attached to a user on several endpoints
+type RoleComplete struct {
+	Id   RoleId   `json:"id"`
+	Name RoleName `json:"name"`
+}
+
+// UsersWithActivity
+// This is the format of the users object on several endpoints
+type UsersWithActivity struct {
+	Id         string         `json:"id"`
+	LastActive *int64         `json:"lastActive"`
+	Milestone  string         `json:"milestone"`
+	Name       string         `json:"name"`
+	Roles      []RoleComplete `json:"roles"`
+}
+
+// PageOptions
+// This handles options for endpoints that only allow page as a param
+type PageOptions struct {
+	Page *int `query:"page"`
+}
