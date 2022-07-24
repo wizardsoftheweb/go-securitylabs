@@ -536,3 +536,20 @@ func (suite *UsersUpdateTestSuite) SetupTest() {
 func (suite *UsersUpdateTestSuite) TearDownTest() {
 	suite.server.Close()
 }
+
+func (suite *UsersUpdateTestSuite) TestClient_PutUser_Success() {
+	user := &UpdateDeleteUser{
+		Email:    "test@hunter2.com",
+		Name:     "test",
+		Admin:    false,
+		Disabled: false,
+		RoleIds:  []string{"4acc432b734d1d55c318ef58"},
+	}
+	updatedUser, updatedUserErr := suite.client.PutUser(context.Background(), testExistingUserIds[0], user)
+	suite.Nilf(updatedUserErr, "PutUser() should not return an error")
+	suite.Equalf(user.Email, updatedUser.Email, "PutUser() should return the same email")
+	suite.Equalf(user.Name, updatedUser.Name, "PutUser() should return the same name")
+	suite.Equalf(user.Admin, updatedUser.Admin, "PutUser() should return the same admin")
+	suite.Equalf(user.Disabled, updatedUser.Disabled, "PutUser() should return the same disabled")
+	suite.Equalf(len(user.RoleIds), len(updatedUser.RoleIds), "PutUser() should return the same number of roles")
+}
