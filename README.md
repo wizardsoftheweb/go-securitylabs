@@ -40,6 +40,8 @@ I don't have access to a Veracode Security Labs account for testing. My current 
 
 Sometime soon I'll have all the GitHub niceties like a Contributing.md and issues templates.
 
+I have [several open questions](docs/open_questions.md).
+
 ## Tentative Roadmap
 
 None of these are in any particular order.
