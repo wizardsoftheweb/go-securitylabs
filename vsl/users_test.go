@@ -386,7 +386,7 @@ func TestUsersTestSuite(t *testing.T) {
 
 func (suite *UsersTestSuite) SetupTest() {
 	mux := http.NewServeMux()
-	mux.Handle("/users", http.HandlerFunc(handlerGetUsers))
+	mux.Handle(GetUsersPath, http.HandlerFunc(handlerGetUsers))
 	mux.Handle(GetUsersDetailsPath, http.HandlerFunc(handlerGetUsersDetails))
 	suite.server = httptest.NewServer(mux)
 	suite.serverUrl, _ = url.Parse(suite.server.URL)
