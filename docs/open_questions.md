@@ -22,3 +22,8 @@
 * The [Get Users Details docs](https://apidocs.hunter2.com/#get-users-details) show `{current,next,previous}Url` as `/api/onboarding`; is this wrong?
 * [Get User Progress](https://apidocs.hunter2.com/#get-user-progress) mentions a `page` query param. There are no examples. It also says "page of users to get" but the response format has pages of lessons.
 * [Put User - Response Example](https://apidocs.hunter2.com/#put-user) misspells `disabled`.
+
+## Summaries
+
+* [Get Progress](https://apidocs.hunter2.com/#get-progress) has an `.users[].lessons[].startTime` field that's specified as `Number`. Is it possible this should be `Number|Null`?
+* [Get Progress](https://apidocs.hunter2.com/#get-progress) has an `.users[].lessons[].endTime` field that's specified as `String|Null` but is returned as, I think, a Unix timestamp.

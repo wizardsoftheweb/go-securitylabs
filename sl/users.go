@@ -27,22 +27,17 @@ const (
 	UpdateDeleteUserPath = "/users/%s"
 )
 
-// GetUsersUsersRoles
-// This is a list of roles attached to a user
-// https://apidocs.hunter2.com/#get-users
-type GetUsersUsersRoles []string
-
 // GetUsersUsers
 // These are all the properties of a user from the /api/user endpoint
 // https://apidocs.hunter2.com/#get-users
 type GetUsersUsers struct {
-	Id         string             `json:"id"`
-	IsAdmin    bool               `json:"isAdmin"`
-	IsDisabled bool               `json:"isDisabled"`
-	Email      string             `json:"email"`
-	Joined     bool               `json:"joined"`
-	LastActive int64              `json:"lastActive"`
-	Roles      GetUsersUsersRoles `json:"roles"`
+	Id         string   `json:"id"`
+	IsAdmin    bool     `json:"isAdmin"`
+	IsDisabled bool     `json:"isDisabled"`
+	Email      string   `json:"email"`
+	Joined     bool     `json:"joined"`
+	LastActive int64    `json:"lastActive"`
+	Roles      []RoleId `json:"roles"`
 }
 
 // GetUsersResponse
@@ -53,14 +48,7 @@ type GetUsersResponse struct {
 	Users    []GetUsersUsers `json:"users"`
 }
 
-// GetUsersOptions
-// These are the query params for the /api/users endpoint
-// https://apidocs.hunter2.com/#get-users
-type GetUsersOptions struct {
-	Page *int `query:"page"`
-}
-
-func (c *Client) GetUsers(ctx context.Context, options *GetUsersOptions) (GetUsersResponse, error) {
+func (c *Client) GetUsers(ctx context.Context, options *PageOptions) (GetUsersResponse, error) {
 	// The only way to generate an error from Client.newRequest is if the body can't build
 	// Since we have no body, we can safely ignore the error
 	request, _ := c.newRequest(http.MethodGet, GetUsersPath, options, nil)
@@ -71,20 +59,6 @@ func (c *Client) GetUsers(ctx context.Context, options *GetUsersOptions) (GetUse
 		return GetUsersResponse{}, responseError
 	}
 	return responseBody, nil
-}
-
-// GetUsersDetailsPages
-// This is the format of the pages object on the /api/users/details endpoint
-// https://apidocs.hunter2.com/#get-users-details
-type GetUsersDetailsPages struct {
-	Current     int     `json:"current"`
-	Previous    *int    `json:"previous"`
-	Next        *int    `json:"next"`
-	Limit       int     `json:"limit"`
-	Total       int     `json:"total"`
-	CurrentUrl  string  `json:"currentUrl"`
-	NextUrl     *string `json:"nextUrl"`
-	PreviousUrl *string `json:"previousUrl"`
 }
 
 // GetUsersDetailsUsersRoles
@@ -99,39 +73,24 @@ type GetUsersDetailsUsersRoles struct {
 // This is the format of the users object on the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
 type GetUsersDetailsUsers struct {
-	Id                       string                      `json:"id"`
-	LastActive               *int64                      `json:"lastActive"`
-	LabsCompleted            int                         `json:"labsCompleted"`
-	PercentRequiredCompleted float64                     `json:"percentRequiredCompleted"`
-	Points                   int                         `json:"points"`
-	Name                     string                      `json:"name"`
-	Roles                    []GetUsersDetailsUsersRoles `json:"roles"`
+	Id                       string         `json:"id"`
+	LastActive               *int64         `json:"lastActive"`
+	LabsCompleted            int            `json:"labsCompleted"`
+	PercentRequiredCompleted float64        `json:"percentRequiredCompleted"`
+	Points                   int            `json:"points"`
+	Name                     string         `json:"name"`
+	Roles                    []RoleComplete `json:"roles"`
 }
 
 // GetUsersDetailsResponse
 // This is the full body of the /api/users/details endpoint
 // https://apidocs.hunter2.com/#get-users-details
 type GetUsersDetailsResponse struct {
-	Pages GetUsersDetailsPages   `json:"pages"`
+	Pages Pages                  `json:"pages"`
 	Users []GetUsersDetailsUsers `json:"users"`
 }
 
-// GetUsersDetailsOptions
-// These are the query params for the /api/users/details endpoint
-// https://apidocs.hunter2.com/#get-users-details
-type GetUsersDetailsOptions struct {
-	CampaignIds []string `query:"campaignIds"`
-	EndTime     *int64   `query:"endTime"`
-	Limit       *int     `query:"limit"`
-	Page        *int     `query:"page"`
-	Phrase      *string  `query:"phrase"`
-	StartTime   *int64   `query:"startTime"`
-	RoleIds     []string `query:"roleIds"`
-	Sort        *string  `query:"sort"`
-	SortType    *string  `query:"sortType"`
-}
-
-func (c *Client) GetUsersDetails(ctx context.Context, options *GetUsersDetailsOptions) (GetUsersDetailsResponse, error) {
+func (c *Client) GetUsersDetails(ctx context.Context, options *UsersDetailsOptions) (GetUsersDetailsResponse, error) {
 	// The only way to generate an error from Client.newRequest is if the body can't build
 	// Since we have no body, we can safely ignore the error
 	request, _ := c.newRequest(http.MethodGet, GetUsersDetailsPath, options, nil)

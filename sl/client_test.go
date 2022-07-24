@@ -116,7 +116,7 @@ func TestClient_attachQueryParams(t *testing.T) {
 	client := NewClient(nil, nil)
 	assert.Equalf(t, productionUrl.String(), client.attachQueryParams(client.BaseUrl.String(), nil), "Url should be set to productionUrl without params")
 	page := new(int)
-	assert.Equalf(t, productionUrl.String(), client.attachQueryParams(client.BaseUrl.String(), &GetUsersOptions{Page: page}), "Url should be set to productionUrl when params evaluate to empty")
+	assert.Equalf(t, productionUrl.String(), client.attachQueryParams(client.BaseUrl.String(), &PageOptions{Page: page}), "Url should be set to productionUrl when params evaluate to empty")
 	*page = 1
-	assert.Equalf(t, productionUrl.String()+"?page=1", client.attachQueryParams(client.BaseUrl.String(), &GetUsersOptions{Page: page}), "Url should be set to productionUrl with params")
+	assert.Equalf(t, productionUrl.String()+"?page=1", client.attachQueryParams(client.BaseUrl.String(), &PageOptions{Page: page}), "Url should be set to productionUrl with params")
 }
