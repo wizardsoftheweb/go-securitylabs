@@ -21,10 +21,10 @@ import (
 )
 
 const (
-	GetUsersPath         = "/users"
-	GetUsersDetailsPath  = "/users/details"
-	GetUserProgressPath  = "/users/%s/progress"
-	UpdateDeleteUserPath = "/users/%s"
+	GetUsersPath        = "/users"
+	GetUsersDetailsPath = "/users/details"
+	GetUserProgressPath = "/users/%s/progress"
+	PutUserPath         = "/users/%s"
 )
 
 // GetUsersUsersRoles
@@ -186,11 +186,11 @@ func (c *Client) GetUserProgress(ctx context.Context, userId string) (GetUserPro
 	return responseBody, nil
 }
 
-// UpdateDeleteUser
+// PutUser
 // This is the format of both the request and repsonse body of the
 // /api/user/:id endpoint
 // https://apidocs.hunter2.com/#put-user
-type UpdateDeleteUser struct {
+type PutUser struct {
 	Email    string   `json:"email"`
 	Name     string   `json:"name"`
 	Admin    bool     `json:"admin"`
@@ -198,15 +198,15 @@ type UpdateDeleteUser struct {
 	RoleIds  []string `json:"roleIds"`
 }
 
-func (c *Client) PutUser(ctx context.Context, userId string, user *UpdateDeleteUser) (UpdateDeleteUser, error) {
+func (c *Client) PutUser(ctx context.Context, userId string, user *PutUser) (PutUser, error) {
 	// The only way to generate an error from Client.newRequest is if the body can't build
 	// Since we have no body, we can safely ignore the error
-	request, _ := c.newRequest(http.MethodPut, fmt.Sprintf(UpdateDeleteUserPath, userId), nil, user)
-	var responseBody UpdateDeleteUser
+	request, _ := c.newRequest(http.MethodPut, fmt.Sprintf(PutUserPath, userId), nil, user)
+	var responseBody PutUser
 	// TODO: Verify error makes sense once Client.do has been fully tested
 	_, responseError := c.do(ctx, request, &responseBody)
 	if nil != responseError {
-		return UpdateDeleteUser{}, responseError
+		return PutUser{}, responseError
 	}
 	return responseBody, nil
 }
