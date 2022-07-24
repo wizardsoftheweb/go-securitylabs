@@ -16,12 +16,14 @@ package vsl
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
 const (
 	GetUsersPath        = "/users"
 	GetUsersDetailsPath = "/users/details"
+	GetUserProgressPath = "/users/%s/progress"
 )
 
 // GetUsersUsersRoles
@@ -163,6 +165,19 @@ type GetUserProgressResponse struct {
 	PointsRequired int                     `json:"pointsRequired"`
 	PointsPossible int                     `json:"pointsPossible"`
 	Lessons        []GetUserProgressLesson `json:"lessons"`
+}
+
+func (c *Client) GetUserProgress(ctx context.Context, userId string) (GetUserProgressResponse, error) {
+	// The only way to generate an error from Client.newRequest is if the body can't build
+	// Since we have no body, we can safely ignore the error
+	request, _ := c.newRequest(http.MethodGet, fmt.Sprintf(GetUserProgressPath, userId), nil, nil)
+	var responseBody GetUserProgressResponse
+	// TODO: Verify error makes sense once Client.do has been fully tested
+	_, responseError := c.do(ctx, request, &responseBody)
+	if nil != responseError {
+		return GetUserProgressResponse{}, responseError
+	}
+	return responseBody, nil
 }
 
 // PutUser
