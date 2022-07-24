@@ -64,7 +64,6 @@ type PageOptions struct {
 	Page *int `query:"page"`
 }
 
-// RoleNames
-// This is the format of the roles object on several endpoints
+// RoleName
 // It's intended to be used when roles is the names, not the IDs
-type RoleNames []string
+type RoleName string
