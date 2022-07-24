@@ -10,6 +10,7 @@
 
 - [Overview](#overview)
 - [Usage](#usage)
+  - [Importing](#importing)
   - [Authentication](#authentication)
   - [Users](#users)
 - [References](#references)
@@ -26,6 +27,16 @@
 My goal for this package is to provide a simple Go client for the Veracode Security Labs API.
 
 ## Usage
+
+### Importing
+
+```bash
+go get github.com/wizardsoftheweb/go-securitylabs/v0/vsl
+```
+
+```go
+import "github.com/wizardsoftheweb/go-securitylabs/v0/vsl"
+```
 
 ### Authentication
 
