@@ -17,3 +17,20 @@ package sl
 const (
 	GetRolesPath = "/roles"
 )
+
+// GetRolesRole
+// This is the format of the role object /api/roles endpoint
+// https://apidocs.hunter2.com/#get-roles
+type GetRolesRole struct {
+	Id           string   `json:"id"`
+	Name         string   `json:"name"`
+	Default      bool     `json:"default"`
+	Public       bool     `json:"public"`
+	Users        []UserId `json:"users"`
+	InvitedUsers []UserId `json:"invitedUsers"`
+}
+
+// GetRolesResponse
+// This is the full body of the /api/roles endpoint
+// https://apidocs.hunter2.com/#get-roles
+type GetRolesResponse []GetRolesRole
