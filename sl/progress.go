@@ -14,6 +14,10 @@
 
 package sl
 
+const (
+	GetProgressPath = "/progress"
+)
+
 // GetProgressUsersLessons
 // This is the format of the lessons object on the users object on the /api/progress endpoint
 // https://apidocs.hunter2.com/#get-progress
