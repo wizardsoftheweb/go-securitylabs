@@ -475,3 +475,35 @@ func (suite *UsersDetailsTestSuite) TestClient_GetUsersDetails_WithPage() {
 }
 
 // TODO: GetUsersDetails: all the other options and conditions
+
+type UsersProgressTestSuite struct {
+	suite.Suite
+	server    *httptest.Server
+	serverUrl *url.URL
+	client    *Client
+}
+
+func TestUsersProgressTestSuite(t *testing.T) {
+	suite.Run(t, new(UsersProgressTestSuite))
+}
+
+func (suite *UsersProgressTestSuite) SetupTest() {
+	mux := http.NewServeMux()
+	// We need to parse the URL because ID is part of it
+	// We could use a fancy server or we could be basic like this
+	mux.Handle("/", http.HandlerFunc(handlerGetUserProgress))
+	suite.server = httptest.NewServer(mux)
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+}
+
+func (suite *UsersProgressTestSuite) TearDownTest() {
+	suite.server.Close()
+}
+
+func (suite *UsersProgressTestSuite) TestClient_GetUserProgress_NoOptions() {
+	progress, progressErr := suite.client.GetUserProgress(context.Background(), testExistingUserIds[0])
+	fmt.Printf("%+v\n", progress)
+	suite.Nilf(progressErr, "GetUsersProgress() should not return an error")
+	suite.Truef(len(progress.Lessons) > 0, "GetUsersProgress() should return at least one lesson")
+}
