@@ -14,6 +14,10 @@
 
 package sl
 
+const (
+	PostInvitePath = "/invite"
+)
+
 // PostInvites
 // This is the format of the request body on the /api/invites endpoint
 // https://apidocs.hunter2.com/#post-invites
