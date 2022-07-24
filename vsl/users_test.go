@@ -272,7 +272,8 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 // https://apidocs.hunter2.com/#get-user-progress
 // I have no idea if these are actually what the API returns
 func handlerGetUserProgress(w http.ResponseWriter, r *http.Request) {
-	userId := strings.Replace(r.URL.RequestURI(), "/api/user/", "", 1)
+	userId := strings.Replace(r.URL.RequestURI(), "/users/", "", 1)
+	userId = strings.Replace(userId, "/progress", "", 1)
 	// TODO: How to test ID validity?
 	if 24 != len(userId) {
 		w.WriteHeader(http.StatusBadRequest)
@@ -315,7 +316,7 @@ func handlerPutUser(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte("{\"message\":\"Invalid request body\"}"))
 		return
 	}
-	userId := strings.Replace(r.URL.RequestURI(), "/api/user/", "", 1)
+	userId := strings.Replace(r.URL.RequestURI(), "/users/", "", 1)
 	// TODO: How to test ID validity?
 	if 24 != len(userId) {
 		w.WriteHeader(http.StatusBadRequest)
@@ -357,7 +358,7 @@ func handlerPutUser(w http.ResponseWriter, r *http.Request) {
 // https://apidocs.hunter2.com/#delete-user
 // I have no idea if these are actually what the API returns
 func handlerDeleteUser(w http.ResponseWriter, r *http.Request) {
-	userId := strings.Replace(r.URL.RequestURI(), "/api/user/", "", 1)
+	userId := strings.Replace(r.URL.RequestURI(), "/users/", "", 1)
 	// TODO: How to test ID validity?
 	if 24 != len(userId) {
 		w.WriteHeader(http.StatusBadRequest)
