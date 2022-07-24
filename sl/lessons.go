@@ -28,3 +28,11 @@ type GetLessonsLesson struct {
 	Points int        `json:"points"`
 	Roles  []RoleName `json:"roles"`
 }
+
+// GetLessonsResponse
+// This is the full body of the /api/lessons endpoint
+// https://apidocs.hunter2.com/#get-lessons
+type GetLessonsResponse struct {
+	NextPage *string            `json:"nextPage"`
+	Lessons  []GetLessonsLesson `json:"lessons"`
+}
