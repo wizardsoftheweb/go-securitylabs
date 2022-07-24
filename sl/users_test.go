@@ -556,3 +556,28 @@ func (suite *UsersUpdateTestSuite) TestClient_PutUser_Success() {
 
 // TODO: PutUser: test the error cases
 // TODO: PutUser: test each field individually
+
+type UsersDeleteTestSuite struct {
+	suite.Suite
+	server    *httptest.Server
+	serverUrl *url.URL
+	client    *Client
+}
+
+func TestUsersDeleteTestSuite(t *testing.T) {
+	suite.Run(t, new(UsersDeleteTestSuite))
+}
+
+func (suite *UsersDeleteTestSuite) SetupTest() {
+	mux := http.NewServeMux()
+	// We need to parse the URL because ID is part of it
+	// We could use a fancy server or we could be basic like this
+	mux.Handle("/", http.HandlerFunc(handlerPutUser))
+	suite.server = httptest.NewServer(mux)
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+}
+
+func (suite *UsersDeleteTestSuite) TearDownTest() {
+	suite.server.Close()
+}
