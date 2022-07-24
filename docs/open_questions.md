@@ -36,3 +36,9 @@
 
 * [Get Roles](https://apidocs.hunter2.com/#get-roles) has the potential to be large. Does it paginate?
 * [Get Role Progress](https://apidocs.hunter2.com/#get-role-progress) appears to return `[{}]`. However, it also has a `[].nextPage`. Since it's returning the progress for a single role, should the entire response be `[{}]` or do the pages just apply to the `users` within the output?
+
+## Invites
+
+[Docs](https://apidocs.hunter2.com/#invites-2)
+
+* Can names be sent [with invites](https://apidocs.hunter2.com/#post-invites)? They don't appear in the docs.
