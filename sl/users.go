@@ -21,10 +21,10 @@ import (
 )
 
 const (
-	GetUsersPath        = "/users"
-	GetUsersDetailsPath = "/users/details"
-	GetUserProgressPath = "/users/%s/progress"
-	PutUserPath         = "/users/%s"
+	GetUsersPath         = "/users"
+	GetUsersDetailsPath  = "/users/details"
+	GetUserProgressPath  = "/users/%s/progress"
+	UpdateDeleteUserPath = "/users/%s"
 )
 
 // GetUsersUsersRoles
@@ -201,7 +201,7 @@ type PutUser struct {
 func (c *Client) PutUser(ctx context.Context, userId string, user *PutUser) (PutUser, error) {
 	// The only way to generate an error from Client.newRequest is if the body can't build
 	// Since we have no body, we can safely ignore the error
-	request, _ := c.newRequest(http.MethodPut, fmt.Sprintf(PutUserPath, userId), nil, user)
+	request, _ := c.newRequest(http.MethodPut, fmt.Sprintf(UpdateDeleteUserPath, userId), nil, user)
 	var responseBody PutUser
 	// TODO: Verify error makes sense once Client.do has been fully tested
 	_, responseError := c.do(ctx, request, &responseBody)
@@ -209,4 +209,15 @@ func (c *Client) PutUser(ctx context.Context, userId string, user *PutUser) (Put
 		return PutUser{}, responseError
 	}
 	return responseBody, nil
+}
+
+func (c *Client) DeleteUser(ctx context.Context, userId string) error {
+	// The only way to generate an error from Client.newRequest is if the body can't build
+	// Since we have no body, we can safely ignore the error
+	request, _ := c.newRequest(http.MethodDelete, fmt.Sprintf(UpdateDeleteUserPath, userId), nil, nil)
+	_, responseError := c.do(ctx, request, nil)
+	if nil != responseError {
+		return responseError
+	}
+	return nil
 }
