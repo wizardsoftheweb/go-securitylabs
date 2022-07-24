@@ -387,7 +387,6 @@ func TestUsersTestSuite(t *testing.T) {
 func (suite *UsersTestSuite) SetupTest() {
 	mux := http.NewServeMux()
 	mux.Handle(GetUsersPath, http.HandlerFunc(handlerGetUsers))
-	mux.Handle(GetUsersDetailsPath, http.HandlerFunc(handlerGetUsersDetails))
 	suite.server = httptest.NewServer(mux)
 	suite.serverUrl, _ = url.Parse(suite.server.URL)
 	suite.client = NewClient(suite.serverUrl, nil)
@@ -424,13 +423,36 @@ func (suite *UsersTestSuite) TestClient_GetUsers_WithPages() {
 	//})
 }
 
-func (suite *UsersTestSuite) TestClient_GetUsersDetails_NoOptions() {
+type UsersDetailsTestSuite struct {
+	suite.Suite
+	server    *httptest.Server
+	serverUrl *url.URL
+	client    *Client
+}
+
+func TestUsersDetailsTestSuite(t *testing.T) {
+	suite.Run(t, new(UsersDetailsTestSuite))
+}
+
+func (suite *UsersDetailsTestSuite) SetupTest() {
+	mux := http.NewServeMux()
+	mux.Handle(GetUsersDetailsPath, http.HandlerFunc(handlerGetUsersDetails))
+	suite.server = httptest.NewServer(mux)
+	suite.serverUrl, _ = url.Parse(suite.server.URL)
+	suite.client = NewClient(suite.serverUrl, nil)
+}
+
+func (suite *UsersDetailsTestSuite) TearDownTest() {
+	suite.server.Close()
+}
+
+func (suite *UsersDetailsTestSuite) TestClient_GetUsersDetails_NoOptions() {
 	details, detailsErr := suite.client.GetUsersDetails(context.Background(), nil)
 	suite.Nilf(detailsErr, "GetUsersDetails() should not return an error")
 	suite.Truef(len(details.Users) > 0, "GetUsersDetails() should return at least one user")
 }
 
-func (suite *UsersTestSuite) TestClient_GetUsersDetails_WithPage() {
+func (suite *UsersDetailsTestSuite) TestClient_GetUsersDetails_WithPage() {
 	page := new(int)
 	*page = 0
 	detailsPage0, detailsPage0Err := suite.client.GetUsersDetails(context.Background(), &GetUsersDetailsOptions{
