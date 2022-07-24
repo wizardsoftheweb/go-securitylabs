@@ -220,6 +220,7 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 		currentUrl := fmt.Sprintf("/api/users/details?%s", currentParams)
 		pages.CurrentUrl = currentUrl
 	} else {
+		// TODO: The docs show /api/onboarding; should this also be that?
 		pages.CurrentUrl = "/api/users/details"
 	}
 	params.Page = nextPage
@@ -230,6 +231,7 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 		pages.NextUrl = &nextUrl
 	} else {
 		pages.NextUrl = new(string)
+		// TODO: The docs show /api/onboarding; should this also be that?
 		*pages.NextUrl = "/api/users/details"
 	}
 	params.Page = previousPage
@@ -240,6 +242,7 @@ func handlerGetUsersDetails(w http.ResponseWriter, r *http.Request) {
 		pages.PreviousUrl = &previousUrl
 	} else {
 		pages.PreviousUrl = new(string)
+		// TODO: The docs show /api/onboarding; should this also be that?
 		*pages.PreviousUrl = "/api/users/details"
 	}
 	pagesBytes, _ := json.Marshal(pages)
