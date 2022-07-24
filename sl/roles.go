@@ -15,7 +15,8 @@
 package sl
 
 const (
-	GetRolesPath = "/roles"
+	GetRolesPath         = "/roles"
+	GetRolesProgressPath = "/roles/%s/progress"
 )
 
 // GetRolesRole
