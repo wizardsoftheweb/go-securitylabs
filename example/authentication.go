@@ -20,7 +20,10 @@ import (
 
 func environmentAuth() {
 	client := vsl.NewClient(nil, nil)
-	client.SetAuthFromEnvironment()
+	err := client.SetAuthFromEnvironment()
+	if nil != err {
+		panic(err)
+	}
 }
 
 func manualAuth() {
