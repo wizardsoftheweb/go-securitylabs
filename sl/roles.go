@@ -35,3 +35,24 @@ type GetRolesRole struct {
 // This is the full body of the /api/roles endpoint
 // https://apidocs.hunter2.com/#get-roles
 type GetRolesResponse []GetRolesRole
+
+// GetRolesProgressUser
+// This is the format of the user object on the /api/roles/{roleId}/progress endpoint
+// https://apidocs.hunter2.com/#get-roles-progress
+type GetRolesProgressUser struct {
+	Id                      string `json:"id"`
+	Name                    string `json:"name"`
+	PercentComplete         int    `json:"percentComplete"`
+	PercentRequiredComplete int    `json:"percentRequiredComplete"`
+}
+
+// GetRolesProgressResponse
+// This is the full body of the /api/roles/{roleId}/progress endpoint
+// https://apidocs.hunter2.com/#get-roles-progress
+// TODO: verify this isn't actually an array of these objects like the docs suggest
+type GetRolesProgressResponse struct {
+	NextPage *string                `json:"nextPage"`
+	Id       string                 `json:"id"`
+	Name     string                 `json:"name"`
+	Users    []GetRolesProgressUser `json:"users"`
+}
