@@ -29,22 +29,11 @@ type GetOnboardingMilestones struct {
 	Started     int `json:"started"`
 }
 
-// GetOnboardingUsers
-// This is the format of the users object on the /api/onboarding endpoint
-// https://apidocs.hunter2.com/#get-onboarding
-type GetOnboardingUsers struct {
-	Id         string           `json:"id"`
-	LastActive *int64           `json:"lastActive"`
-	Milestone  string           `json:"milestone"`
-	Name       string           `json:"name"`
-	Roles      []RolesWithNames `json:"roles"`
-}
-
 // GetOnboardingResponse
 // This is the full body of the /api/onboarding endpoint
 // https://apidocs.hunter2.com/#get-onboarding
 type GetOnboardingResponse struct {
 	Milestones GetOnboardingMilestones `json:"milestones"`
 	Pages      Pages                   `json:"pages"`
-	Users      []GetOnboardingUsers    `json:"users"`
+	Users      []UsersWithActivity     `json:"users"`
 }

@@ -47,3 +47,13 @@ type RolesWithNames struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
+
+// UsersWithActivity
+// This is the format of the users object on several endpoints
+type UsersWithActivity struct {
+	Id         string           `json:"id"`
+	LastActive *int64           `json:"lastActive"`
+	Milestone  string           `json:"milestone"`
+	Name       string           `json:"name"`
+	Roles      []RolesWithNames `json:"roles"`
+}
