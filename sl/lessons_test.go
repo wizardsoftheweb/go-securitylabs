@@ -66,3 +66,36 @@ func handlerGetLessonProgress(w http.ResponseWriter, r *http.Request) {
   }]
 }`))
 }
+
+// GET /api/lessons/search?phrase=XSS
+// responses pulled from
+// https://apidocs.hunter2.com/#get-lesson-by-topic
+// I have no idea if these are actually what the API returns
+func handlerGetLessonsSearch(w http.ResponseWriter, r *http.Request) {
+	// TODO: handlerGetLessonsSearch: implement
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(`{
+  "pages": {
+    "current": 1,
+    "previous": 0,
+    "next": null,
+    "limit": 10,
+    "currentUrl": '/api/lessons/search?limit=10&page=1',
+    "nextUrl": null,
+    "previousUrl": null ,
+    "total": 1
+  },
+  "lessons": [
+    {
+      "challenge": false,
+      "description": 'Decrypt cookies and hijack another user account.',
+      "stack": 'node',
+      "tags": ['Node.js'],
+      "title": 'Bad Cookie',
+      "topic": 'secure cookies for user sessions',
+      "url": '/lesson/bad-cookie'
+    }
+  ]
+}`))
+}
