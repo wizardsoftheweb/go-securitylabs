@@ -53,3 +53,18 @@ type GetCampaignsProgressResponse struct {
 	Pages       Pages                             `json:"pages"`
 	Users       []UsersWithActivity               `json:"users"`
 }
+
+// GetCampaignsProgessOptions
+// This is the format of the options object on the /api/campaigns/progress endpoint
+// https://apidocs.hunter2.com/#get-campaigns-progress
+type GetCampaignsProgessOptions struct {
+	AssignmentIds       []string `query:"assignmentIds"`
+	CampaignIds         []string `query:"campaignIds"`
+	IncludeOptionalLabs bool     `query:"includeOptionalLabs"`
+	Limit               int      `query:"limit"`
+	Page                int      `query:"page"`
+	Phrase              string   `query:"phrase"`
+	RoleIds             []string `query:"roleIds"`
+	Sort                string   `query:"sort"`
+	SortType            string   `query:"sortType"`
+}
