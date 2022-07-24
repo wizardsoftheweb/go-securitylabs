@@ -92,10 +92,10 @@ None of these are in any particular order.
     - [ ] GET /api/roles/:id/progress?page=0
   - [ ] Invites
     - [ ] POST /api/invites
-- [ ] Develop wrappers for [each endpoint](https://apidocs.hunter2.com/#endpoints)
+- [ ] Develop wrappers for [each endpoint](https://apidocs.hunter2.com/#endpoints) (including bubbling up errors)
   - [ ] Authentication
   - [ ] Users
-    - [x] GET /api/users?page=0
+    - [ ] GET /api/users?page=0
     - [ ] GET /api/users/details?page=0
     - [ ] GET /api/users/:id/progress
     - [ ] PUT /api/users/:id
